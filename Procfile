@@ -1,2 +1,2 @@
-web: poetry run daphne dosac.asgi:application
-worker: poetry run python manage.py qcluster
+web: daphne dosac.asgi:application
+worker: python manage.py qcluster
