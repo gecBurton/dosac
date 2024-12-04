@@ -12,6 +12,7 @@ from langchain_core.documents import Document as LangchainDocument
 import requests
 
 from django.contrib.auth.models import AbstractUser, UserManager
+from django_q.tasks import async_task
 
 
 class CoreUserManager(UserManager):
@@ -63,9 +64,14 @@ class Document(BaseModel):
     def __str__(self):
         return self.file.name
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        async_task(self.generate_elements)
+
     def generate_elements(self):
         headers = {
             "accept": "application/json",
+            "unstructured-api-key": settings.UNSTRUCTURED_API_KEY,
         }
 
         files = {
@@ -81,7 +87,7 @@ class Document(BaseModel):
         }
 
         response = requests.post(
-            settings.UNSTRUCTURED_URL, headers=headers, files=files
+            settings.UNSTRUCTURED_API_URL, headers=headers, files=files
         )
         response.raise_for_status()
 

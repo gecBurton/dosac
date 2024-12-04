@@ -27,6 +27,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "django_q",
     "daphne",
     "core.apps.CoreConfig",
     "django.contrib.admin",
@@ -82,9 +83,8 @@ DATABASES = {
     }
 }
 
-UNSTRUCTURED_HOST = os.environ["UNSTRUCTURED_HOST"]
-UNSTRUCTURED_PORT = os.environ["UNSTRUCTURED_PORT"]
-UNSTRUCTURED_URL = f"http://{UNSTRUCTURED_HOST}:{UNSTRUCTURED_PORT}/general/v0/general"
+UNSTRUCTURED_API_URL = os.environ["UNSTRUCTURED_API_URL"]
+UNSTRUCTURED_API_KEY = os.environ["UNSTRUCTURED_API_KEY"]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -145,3 +145,14 @@ ASGI_APPLICATION = "dosac.asgi.application"
 
 
 AUTH_USER_MODEL = "core.User"
+
+
+Q_CLUSTER = {
+    "name": "DjangORM",
+    "workers": 4,
+    "timeout": 90,
+    "retry": 120,
+    "queue_limit": 50,
+    "bulk": 10,
+    "orm": "default",
+}

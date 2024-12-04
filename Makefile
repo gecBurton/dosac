@@ -13,3 +13,7 @@ migrations:
 
 run:
 	poetry run daphne -p 8080 dosac.asgi:application
+
+
+worker:
+	poetry run python manage.py qcluster
