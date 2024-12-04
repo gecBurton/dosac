@@ -14,11 +14,6 @@ from core.tools import (
     search_wikipedia,
 )
 
-agent = create_react_agent(
-    get_chat_llm(),
-    tools=[search_wikipedia, search_documents, list_documents, delete_document],
-)
-
 
 class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def disconnect(self, close_code):
@@ -26,6 +21,11 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         await self.close()
 
     async def receive_json(self, content, **kwargs):
+        agent = create_react_agent(
+            get_chat_llm(),
+            tools=[search_wikipedia, search_documents, list_documents, delete_document],
+        )
+
         chat_message = ChatMessage.model_validate(content)
 
         chat = await Chat.objects.aget(id=chat_message.chat_id)
