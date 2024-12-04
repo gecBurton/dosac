@@ -2,9 +2,9 @@ import wikipedia
 from langchain_core.documents import Document
 from langchain_core.tools import tool
 
-from django.conf import settings
 from pgvector.django import CosineDistance
 
+from core.ai_core import get_embedding_model
 from core.models import Document as DocumentModel, Chat, Embedding
 
 
@@ -40,7 +40,7 @@ def search_wikipedia(
 @tool(response_format="content_and_artifact")
 def search_documents(query: str, top_k_results: int = 3) -> tuple[str, list[Document]]:
     """search users own documents for relevant sections"""
-    embedded_query = settings.EMBEDDING_MODEL.embed_query(query)
+    embedded_query = get_embedding_model().embed_query(query)
     results = Embedding.objects.annotate(
         distance=CosineDistance("embedding", embedded_query)
     ).order_by("distance")[:top_k_results]

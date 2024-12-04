@@ -1,8 +1,6 @@
 import os
 from pathlib import Path
 
-from langchain.chat_models import init_chat_model
-from langchain_openai.embeddings import AzureOpenAIEmbeddings
 
 from dotenv import load_dotenv
 
@@ -131,15 +129,6 @@ MEDIA_ROOT = BASE_DIR
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
-LLM = init_chat_model(
-    model="gpt-4o",
-    model_provider="azure_openai",
-)
-
-EMBEDDING_MODEL = AzureOpenAIEmbeddings(
-    model="text-embedding-3-large",
-)
 
 ASGI_APPLICATION = "dosac.asgi.application"
 

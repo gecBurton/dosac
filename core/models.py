@@ -14,6 +14,8 @@ import requests
 from django.contrib.auth.models import AbstractUser, UserManager
 from django_q.tasks import async_task
 
+from core.ai_core import get_embedding_model
+
 
 class CoreUserManager(UserManager):
     def _create_user(self, email, password, **extra_fields):
@@ -97,7 +99,7 @@ class Document(BaseModel):
             element_response["metadata"] for element_response in response.json()
         ]
 
-        embeddings: list[list[float]] = settings.EMBEDDING_MODEL.embed_documents(texts)
+        embeddings: list[list[float]] = get_embedding_model().embed_documents(texts)
 
         for i, (text, embedding, metadata) in enumerate(
             zip(texts, embeddings, metadatas)
