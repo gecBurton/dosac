@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+    .messageBox {
+        max-width: 80%;
+    }
+
+    body {
+        font-family: 'Courier New', Courier, monospace;
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    .activity-log {
+        background-color: grey
+    }
+
+    pre {
+        white-space: pre-wrap;
+    }
+    </style>
+    <title>DoSAC ChatBot</title>
+</head>
+<body>
+    <script>
+        let buffer = '';
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <h1>DoSAC chat 2000</h1>
+
+    <a href={% url 'chat-new' %}>New Chat</a>
+    <div id="messages" class="messageBox">
+        {% for message in chat.chatmessage_set.all %}
+            {% if message.type == 'ai' %}
+               <div class="aiMessage"><pre>@malcom.tucker: {{ message.annotated_content }}</pre></div>
+            {% else %}
+               <div class="userMessage"><pre><b>@me: {{ message.content }}</b></pre></div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <input id="messageInput" type="text" placeholder="Enter message">
+    <button onclick="sendMessage()">Send</button>
+    <div id="activity-log" class="activity-log"></div>
+    <div>
+    your previous chat...
+    <ul>
+        {% for chat in chat_history %}
+        <li>
+            {% url 'chat-detail' chat.pk as link %}
+            <a href="{{ link }}">{{ chat }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    </div>
+
+    <script>
+       document.addEventListener('DOMContentLoaded', function () {
+           var elements = document.querySelectorAll('.aiMessage');
+
+           elements.forEach(function (element) {
+               var markdownText = element.textContent; // Get the Markdown text
+               var htmlContent = marked.parse(markdownText); // Convert to HTML
+               element.innerHTML = htmlContent; // Replace the content
+           });
+       });
+   </script>
+    <script>
+
+        const socket = new WebSocket('ws://' + window.location.host + '/chat/');
+
+        socket.onmessage = function(e) {
+            const message = JSON.parse(e.data);
+            const messages = document.getElementById('messages');
+            const log = document.getElementById("activity-log")
+            const lastMessage = messages.lastChild;
+
+            if (message.event == 'on_chat_model_stream') {
+                buffer += message.data.chunk.content;
+                lastMessage.innerHTML = marked.parse(buffer);
+            } else if (message.event == 'done') {
+                lastMessage.innerHTML = marked.parse( message.data.annotated_content );
+                log.innerHTML = 'done';
+            } else if (message.event == 'on_tool_start') {
+                const txt = "using " + message.name + " with " + JSON.stringify(message.data.input);
+                log.innerHTML = txt;
+            } else if (message.event == 'on_tool_end') {
+                log.innerHTML = "";
+            } else {
+                console.log(message);
+            }
+        };
+
+        function sendMessage() {
+            const messages = document.getElementById('messages');
+            const input = document.getElementById('messageInput');
+
+            const userMessage = document.createElement("div");
+            userMessage.innerHTML = '<b>@me: ' + input.value + '</b>';
+            userMessage.className = "aiMessage";
+            messages.appendChild(userMessage);
+
+            const aiMessage = document.createElement("div");
+            aiMessage.className = "aiMessage";
+            aiMessage.innerHTML = '@malcom.tucker: ';
+            messages.appendChild(aiMessage);
+
+            socket.send(JSON.stringify({'chat_id': '{{ chat.pk }}', 'message': {'content': input.value, 'type': 'human'}}));
+            input.value = '';
+
+            buffer = '';
+        }
+    </script>
+</body>
+</html>
