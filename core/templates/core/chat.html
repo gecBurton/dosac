@@ -6,6 +6,10 @@
         max-width: 80%;
     }
 
+    .new-message {
+        min-width: 80%;
+    }
+
     body {
         font-family: 'Courier New', Courier, monospace;
         padding: 20px;
@@ -21,15 +25,15 @@
     }
     </style>
     <title>DoSAC ChatBot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">    <h1>DoSAC chat 2000</h1>
 </head>
 <body>
     <script>
         let buffer = '';
     </script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <h1>DoSAC chat 2000</h1>
 
-    <a href={% url 'chat-new' %}>New Chat</a>
+    <a href={% url 'chat-new' %}><i class="fa fa-plus" style="font-size:36px"></i></a>
     <div id="messages" class="messageBox">
         {% for message in chat.chatmessage_set.all %}
             {% if message.type == 'ai' %}
@@ -39,11 +43,11 @@
             {% endif %}
         {% endfor %}
     </div>
-    <input id="messageInput" type="text" placeholder="Enter message">
+    <input id="messageInput" type="text" placeholder="Enter message" class="new-message">
     <button onclick="sendMessage()">Send</button>
     <div id="activity-log" class="activity-log"></div>
     <div>
-    your previous chat...
+    your previous chats:
     <ul>
         {% for chat in chat_history %}
         <li>
