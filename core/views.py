@@ -1,5 +1,6 @@
 from uuid import UUID
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 
@@ -34,5 +35,11 @@ def chat_detail(request, pk: UUID):
     chat_history = Chat.objects.filter(user=request.user).order_by("-created_at")
 
     return render(
-        request, "core/chat.html", {"chat": chat, "chat_history": chat_history}
+        request,
+        "core/chat.html",
+        {
+            "chat": chat,
+            "chat_history": chat_history,
+            "scheme": settings.WEBSOCKET_SCHEME,
+        },
     )
