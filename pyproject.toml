@@ -18,6 +18,7 @@ python = "^3.12"
 python-dotenv = "^1.0.1"
 wikipedia-sections = "^2.0.0"
 django-q2 = "^1.7.4"
+django-sesame = "^3.2.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.8.1"

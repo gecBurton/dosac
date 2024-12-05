@@ -1,10 +1,19 @@
 from uuid import UUID
 
+from charset_normalizer.md import getLogger
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 
+from core.forms import LoginForm
 from core.models import Document, Chat
+from sesame.utils import get_query_string
+
+logger = getLogger(__name__)
+User = get_user_model()
 
 
 @login_required
@@ -43,3 +52,26 @@ def chat_detail(request, pk: UUID):
             "scheme": settings.WEBSOCKET_SCHEME,
         },
     )
+
+
+def magic(request):
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data["email"]
+            try:
+                user = User.objects.get(email=email)
+                message = f"click here to login: {request.get_host()}{settings.LOGIN_URL}{get_query_string(user)}"
+                _, domain = settings.EMAIL_HOST_USER.split("@")
+                send_mail("dosac login", message, f"no-reply@{domain}", [email])
+                logger.info(message)
+            except User.DoesNotExist:
+                logger.warn(f"user={email} does not exist")
+            return HttpResponseRedirect("/email-sent/")
+
+    form = LoginForm()
+    return render(request, "core/login.html", {"login_form": form})
+
+
+def email_sent(request):
+    return render(request, "core/email_sent.html")
