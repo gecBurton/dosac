@@ -24,10 +24,20 @@ if APP_HOST := os.environ.get("APP_HOST"):
     ALLOWED_HOSTS = ["localhost", APP_HOST]
     CSRF_TRUSTED_ORIGINS = [f"https://{APP_HOST}"]
     WEBSOCKET_SCHEME = "wss"
+
+    EMAIL_HOST = os.environ["MAILGUN_SMTP_SERVER"]
+    EMAIL_PORT = os.environ["MAILGUN_SMTP_PORT"]
+    EMAIL_HOST_USER = os.environ["MAILGUN_SMTP_LOGIN"]
+    EMAIL_HOST_PASSWORD = os.environ["MAILGUN_SMTP_PASSWORD"]
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
 else:
     ALLOWED_HOSTS = ["localhost"]
     CSRF_TRUSTED_ORIGINS = []
     WEBSOCKET_SCHEME = "ws"
+
+    EMAIL_HOST_USER = "no-reply@example.com"
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Application definition
 
@@ -152,3 +162,11 @@ Q_CLUSTER = {
     "bulk": 10,
     "orm": "default",
 }
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "sesame.backends.ModelBackend",
+]
+
+LOGIN_URL = "/sesame/login/"
+LOGIN_REDIRECT_URL = "/chats/"

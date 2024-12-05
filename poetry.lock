@@ -650,6 +650,23 @@ sentry = ["django-q-sentry (>=0.1)"]
 testing = ["blessed (>=1.19.1,<2.0.0)", "boto3 (>=1.24.92,<2.0.0)", "croniter (>=2.0.1,<3.0.0)", "django-redis (>=5.2.0,<6.0.0)", "hiredis (>=2.0.0,<3.0.0)", "iron-mq (>=0.9,<0.10)", "psutil (>=5.9.2,<6.0.0)", "pymongo (>=4.2.0,<5.0.0)", "redis (>=4.3.4,<5.0.0)", "setproctitle (>=1.3.2,<2.0.0)"]
 
 [[package]]
+name = "django-sesame"
+version = "3.2.2"
+description = "Frictionless authentication with \"Magic Links\" for your Django project."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django_sesame-3.2.2-py3-none-any.whl", hash = "sha256:523ebd4d04e28c897c262f25b78b6fd8f37e11cdca6e277fdc8bf496bd686cf5"},
+    {file = "django_sesame-3.2.2.tar.gz", hash = "sha256:5d753a309166356b6a0d7fc047690943b9e80b4aa7952f1a6400fe6ce60d573c"},
+]
+
+[package.dependencies]
+django = ">=3.2"
+
+[package.extras]
+ua = ["ua-parser (>=0.15)"]
+
+[[package]]
 name = "frozenlist"
 version = "1.5.0"
 description = "A list-like structure which implements collections.abc.MutableSequence"
@@ -2859,4 +2876,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "ccfb491b09b415742045c8d71a56112a13a1a53b0c1f924497707ffa3defb61c"
+content-hash = "9c1bd0285e415ef22651523244109a81aefc499c654a1a7c42a52ed8523b9c98"
