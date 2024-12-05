@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="39ae206b-4e48-458b-a9df-a8fbeb2d6134" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/core/templates/core/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/templates/core/chat.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/chat.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/templates/core/email_sent.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/email_sent.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/templates/core/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/login.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,7 +41,7 @@
     "DefaultHtmlFileTemplate": "HTML File",
     "Python tests.pytest for tests.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feature/gov-uk",
+    "git-widget-placeholder": "feature/fonts",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>

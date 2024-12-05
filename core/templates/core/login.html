@@ -1,5 +1,19 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
 <form action="{% url 'magic' %}" method="post">
     {% csrf_token %}
-    {{ login_form }}
-    <button type="submit">Send login email</button>
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="email">
+        Email address
+      </label>
+      <div id="email-hint" class="govuk-hint">
+          We’ll use this to send you a link to login.
+      </div>
+      <input class="govuk-input" id="email" name="email" type="email" spellcheck="false" aria-describedby="email-hint" autocomplete="email">
+    </div>
+    <button type="submit" class="govuk-button" data-module="govuk-button">Send</button>
 </form>
+
+{% endblock %}
