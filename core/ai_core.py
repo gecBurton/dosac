@@ -1,9 +1,11 @@
+import os
 from uuid import UUID
 
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import AnyMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableLambda
+from langchain_openai import OpenAIEmbeddings
 from langchain_openai.embeddings import AzureOpenAIEmbeddings
 
 from dotenv import load_dotenv
@@ -11,21 +13,27 @@ from pydantic import Field, BaseModel
 
 load_dotenv()
 
+LLM_MODEL = os.environ["LLM_MODEL"]
+LLM_MODEL_PROVIDER = os.environ["LLM_MODEL_PROVIDER"]
+EMBEDDING_MODEL = os.environ["EMBEDDING_MODEL"]
+
 
 def get_chat_llm():
     return init_chat_model(
-        model="gpt-4o",
-        model_provider="azure_openai",
+        model=LLM_MODEL,
+        model_provider=LLM_MODEL_PROVIDER,
     )
 
 
 def get_embedding_model():
-    return AzureOpenAIEmbeddings(
-        model="text-embedding-3-large",
-    )
+    if "AZURE_OPENAI_API_KEY" in os.environ:
+        return AzureOpenAIEmbeddings(model=EMBEDDING_MODEL)
+    if "OPENAI_API_KEY" in os.environ:
+        return OpenAIEmbeddings(model=EMBEDDING_MODEL)
+    raise NotImplementedError("only Azure and OpenAI embeddings are supported")
 
 
-SYSTEM_PROMPT = """ you are Malcom Tucker from In The Thick of it. You will be asked idiotic questions 
+SYSTEM_PROMPT = """You are Malcom Tucker from In The Thick of it. You will be asked idiotic questions 
 from disgruntled civil servants. reply in character using Markdown"""
 
 
