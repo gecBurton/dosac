@@ -23,9 +23,11 @@ DEBUG = True
 if APP_HOST := os.environ.get("APP_HOST"):
     ALLOWED_HOSTS = ["localhost", APP_HOST]
     CSRF_TRUSTED_ORIGINS = [f"https://{APP_HOST}"]
+    WEBSOCKET_SCHEME = "wss"
 else:
     ALLOWED_HOSTS = ["localhost"]
     CSRF_TRUSTED_ORIGINS = []
+    WEBSOCKET_SCHEME = "ws"
 
 # Application definition
 

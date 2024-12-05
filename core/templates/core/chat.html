@@ -71,7 +71,7 @@
    </script>
     <script>
 
-        const socket = new WebSocket('ws://' + window.location.host + '/chat/');
+        const socket = new WebSocket('{{ scheme }}://' + window.location.host + '/chat/');
 
         socket.onmessage = function(e) {
             const message = JSON.parse(e.data);
