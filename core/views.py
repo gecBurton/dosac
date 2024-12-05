@@ -1,3 +1,4 @@
+from smtplib import SMTPDataError
 from uuid import UUID
 
 from charset_normalizer.md import getLogger
@@ -67,6 +68,8 @@ def magic(request):
                 logger.info(message)
             except User.DoesNotExist:
                 logger.warn(f"user={email} does not exist")
+            except SMTPDataError as e:
+                logger.error(f"failed to send email to user={email}: {e}")
             return HttpResponseRedirect("/email-sent/")
 
     form = LoginForm()
