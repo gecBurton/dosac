@@ -62,9 +62,10 @@ def magic(request):
             email = form.cleaned_data["email"]
             try:
                 user = User.objects.get(email=email)
-                message = f"click here to login: {request.get_host()}{settings.LOGIN_URL}{get_query_string(user)}"
-                _, domain = settings.EMAIL_HOST_USER.split("@")
-                send_mail("dosac login", message, f"no-reply@{domain}", [email])
+                host = request.get_host()
+                token = get_query_string(user)
+                message = f"click here to login: {settings.HTTP_SCHEME}://{host}{settings.LOGIN_URL}{token}"
+                send_mail("dosac login", message, settings.EMAIL_HOST_USER, [email])
                 logger.info(message)
             except User.DoesNotExist:
                 logger.warn(f"user={email} does not exist")
