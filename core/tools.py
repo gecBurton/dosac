@@ -46,28 +46,14 @@ def search_wikipedia(
 @tool(response_format="content_and_artifact")
 def search_documents(query: str, top_k_results: int = 3) -> tuple[str, list[Document]]:
     """search users own documents for relevant sections"""
-    logger.info("using search_documents")
-    logger.info("embedding query")
     embedded_query = get_embedding_model().embed_query(query)
-    logger.info("fetching docs")
     results = Embedding.objects.annotate(
         distance=CosineDistance("embedding", embedded_query)
     ).order_by("distance")[:top_k_results]
 
-    logger.info(f"converting {results.count()} docs to langchain")
-    try:
-        documents = [x.to_langchain() for x in results]
-    except Exception as e:
-        logger.error(e)
-        documents = []
+    documents = [x.to_langchain() for x in results]
     logger.info(f"converted {len(documents)} docs to langchain")
-    try:
-        a, b = "\n\n".join(document.page_content for document in documents), documents
-        logger.info("retuning results")
-        return a, b
-    except Exception as e:
-        logger.error(e)
-        return "No docs found", []
+    return "\n\n".join(document.page_content for document in documents), documents
 
 
 @tool(response_format="content_and_artifact")
