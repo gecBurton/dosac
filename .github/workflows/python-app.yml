@@ -17,6 +17,7 @@ jobs:
 
     - name: Build Containers
       run: |
+        ls
         docker compose up -d --wait postgres minio
 
     - uses: actions/checkout@v3
