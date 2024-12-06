@@ -9,24 +9,18 @@ on:
 
 
 jobs:
-  static_checks:
-    services:
-      postgres:
-        image: ankane/pgvector
-        env:
-          POSTGRES_PASSWORD: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
+  checks:
 
     runs-on: ubuntu-latest
 
     steps:
+
     - uses: actions/checkout@v3
+
+    - name: Build Containers
+      run: |
+        ls
+        docker compose up -d --wait postgres minio
 
     - name: Set up Python 3.12
       uses: actions/setup-python@v3
@@ -60,6 +54,10 @@ jobs:
         UNSTRUCTURED_API_URL: https://api.unstructured.io/general/v0/general
         UNSTRUCTURED_API_KEY: insecure
         SECRET_KEY: django-insecure
+        MINIO_ACCESS_KEY: minioadmin
+        MINIO_SECRET_KEY: minioadmin
+        MINIO_BUCKET_NAME: dosca
+
 
       run: make test
 

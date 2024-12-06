@@ -3,13 +3,25 @@ services:
   postgres:
     image: ankane/pgvector
     ports:
-      - 5432:5432
+      - '5432:5432'
     environment:
       - POSTGRES_PASSWORD=postgres
     restart: always
     volumes:
       - local_postgres_data:/var/lib/postgresql/data:Z
 
+  minio:
+    image: minio/minio:latest
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - local_minio_data:/data
+    environment:
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+    command: server --console-address ":9001" /data
 
 volumes:
   local_postgres_data: {}
+  local_minio_data: {}

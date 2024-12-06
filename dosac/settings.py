@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-
+import boto3
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -32,6 +32,12 @@ if APP_HOST := os.environ.get("APP_HOST"):
     EMAIL_HOST_PASSWORD = os.environ["MAILGUN_SMTP_PASSWORD"]
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
+    AWS_ACCESS_KEY_ID = os.environ["BUCKETEER_AWS_ACCESS_KEY_ID"]
+    AWS_S3_REGION_NAME = os.environ["BUCKETEER_AWS_REGION"]
+    AWS_SECRET_ACCESS_KEY = os.environ["BUCKETEER_AWS_SECRET_ACCESS_KEY"]
+    AWS_STORAGE_BUCKET_NAME = os.environ["BUCKETEER_BUCKET_NAME"]
+
+
 else:
     ALLOWED_HOSTS = ["localhost"]
     CSRF_TRUSTED_ORIGINS = []
@@ -40,6 +46,25 @@ else:
 
     EMAIL_HOST_USER = "no-reply@example.com"
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+    AWS_ACCESS_KEY_ID = os.environ["MINIO_ACCESS_KEY"]
+    AWS_S3_REGION_NAME = "eu-west-2"
+    AWS_SECRET_ACCESS_KEY = os.environ["MINIO_SECRET_KEY"]
+    AWS_STORAGE_BUCKET_NAME = os.environ["MINIO_BUCKET_NAME"]
+    AWS_S3_ENDPOINT_URL = "http://localhost:9000"
+
+    s3 = boto3.client(
+        "s3",
+        endpoint_url=AWS_S3_ENDPOINT_URL,
+        aws_access_key_id=AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+    )
+
+    try:
+        s3.create_bucket(Bucket=AWS_STORAGE_BUCKET_NAME)
+    except Exception:
+        pass
+
 
 # Application definition
 
@@ -172,3 +197,12 @@ AUTHENTICATION_BACKENDS = [
 
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/"
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+    },
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+    },
+}
