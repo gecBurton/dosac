@@ -1,4 +1,7 @@
+from logging import getLogger
+
 import wikipedia
+from django.contrib.auth import get_user_model
 from langchain_core.documents import Document
 from langchain_core.tools import tool
 
@@ -6,6 +9,9 @@ from pgvector.django import CosineDistance
 
 from core.ai_core import get_embedding_model
 from core.models import Document as DocumentModel, Chat, Embedding
+
+logger = getLogger(__name__)
+User = get_user_model()
 
 
 @tool(response_format="content_and_artifact")
@@ -40,12 +46,16 @@ def search_wikipedia(
 @tool(response_format="content_and_artifact")
 def search_documents(query: str, top_k_results: int = 3) -> tuple[str, list[Document]]:
     """search users own documents for relevant sections"""
+    logger.info("using search_documents")
+    logger.info("embedding query")
     embedded_query = get_embedding_model().embed_query(query)
+    logger.info("fetching docs")
     results = Embedding.objects.annotate(
         distance=CosineDistance("embedding", embedded_query)
     ).order_by("distance")[:top_k_results]
+    logger.info("converting to langchain")
     documents = [x.to_langchain() for x in results]
-
+    logger.info("retuning results")
     return "\n\n".join(document.page_content for document in documents), documents
 
 
