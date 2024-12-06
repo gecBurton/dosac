@@ -10,6 +10,16 @@ on:
 
 jobs:
   static_checks:
+    services:
+      postgres:
+        image: ankane/pgvector
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     runs-on: ubuntu-latest
 
@@ -30,7 +40,9 @@ jobs:
       run: |
         poetry install
 
-    - name: Format code
-      run: |
-        poetry run ruff format . --check
-        poetry run ruff check .
+    - name: Check Formatting
+      run: make format
+
+    - name: Run Tests
+      run: make test
+
