@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.db.models import Count
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 
@@ -35,7 +36,11 @@ def chat_new(request):
 def chat_detail(request, pk: UUID):
     chat = get_object_or_404(Chat, pk=pk, user=request.user)
 
-    chat_history = Chat.objects.filter(user=request.user).order_by("-created_at")
+    chat_history = (
+        Chat.objects.annotate(message_count=Count("chatmessage"))
+        .filter(user=request.user, message_count__gte=1)
+        .order_by("-created_at")
+    )
 
     return render(
         request,
