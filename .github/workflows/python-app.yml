@@ -55,8 +55,8 @@ jobs:
         UNSTRUCTURED_API_KEY: insecure
         SECRET_KEY: django-insecure
         MINIO_ACCESS_KEY: minioadmin
-        AWS_SECRET_ACCESS_KEY: minioadmin
-        AWS_STORAGE_BUCKET_NAME: dosca
+        MINIO_SECRET_KEY: minioadmin
+        MINIO_BUCKET_NAME: dosca
 
 
       run: make test
