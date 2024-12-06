@@ -2,10 +2,11 @@ from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from langchain_core.messages import (
     SystemMessage,
+    HumanMessage,
 )
 from langgraph.prebuilt import create_react_agent
 
-from core.ai_core import get_chat_llm, ChatMessage, citations, SYSTEM_PROMPT, to_json
+from core.ai_core import get_chat_llm, citations, SYSTEM_PROMPT, to_json
 from core.models import Chat, ChatMessage as ChatMessageModel, Citation as CitationModel
 from core.tools import (
     search_documents,
@@ -21,18 +22,18 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         await self.close()
 
     async def receive_json(self, content, **kwargs):
+        chat_id = self.scope["url_route"]["kwargs"]["chat_id"]
+
         agent = create_react_agent(
             get_chat_llm(),
             tools=[search_wikipedia, search_documents, list_documents, delete_document],
         )
 
-        chat_message = ChatMessage.model_validate(content)
+        message = HumanMessage.model_validate(content)
 
-        chat = await Chat.objects.aget(id=chat_message.chat_id)
+        chat = await Chat.objects.aget(id=chat_id)
 
-        await sync_to_async(ChatMessageModel.from_langchain)(
-            chat=chat, message=chat_message.message
-        )
+        await sync_to_async(ChatMessageModel.from_langchain)(chat=chat, message=message)
 
         graph = agent | {"citations": citations}
 

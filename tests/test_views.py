@@ -14,7 +14,7 @@ def test_document_detail(client, user_document: Document):
 
 @pytest.mark.django_db
 def test_login(client, user, mailoutbox):
-    url = reverse("magic")
+    url = reverse("login")
     login_response = client.post(url, data={"email": user.email})
     assert login_response.status_code == 302
     assert login_response.url == "/email-sent/"
@@ -23,7 +23,7 @@ def test_login(client, user, mailoutbox):
     assert intro == "click here to login"
     magic_link_response = client.get(link.strip())
     assert magic_link_response.status_code == 302
-    assert magic_link_response.url == "/chat/"
+    assert magic_link_response.url == "/"
 
 
 @pytest.mark.django_db
@@ -32,6 +32,5 @@ def test_chat_new(client, user):
     url = reverse("chat-new")
     response = client.get(url)
     assert response.status_code == 302
-    resource, pk = response.url.strip("/").split("/")
-    assert resource == "chat"
+    pk = response.url.strip("/")
     assert Chat.objects.filter(pk=pk).exists()

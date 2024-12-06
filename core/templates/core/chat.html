@@ -14,7 +14,8 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 <script>
-const socket = new WebSocket('{{ scheme }}://' + window.location.host + '/chat/');
+const url = '{{ scheme }}://' + window.location.host + window.location.pathname;
+const socket = new WebSocket(url);
 
 socket.onmessage = function(e) {
     const message = JSON.parse(e.data);
@@ -43,9 +44,8 @@ function sendMessage() {
     aiMessage.innerHTML = '@malcom.tucker: ';
     messages.appendChild(aiMessage);
 
-    socket.send(JSON.stringify({'chat_id': '{{ chat.pk }}', 'message': {'content': input.value, 'type': 'human'}}));
+    socket.send(JSON.stringify({'content': input.value, 'type': 'human'}));
     input.value = '';
-
     buffer = '';
 }
 </script>
