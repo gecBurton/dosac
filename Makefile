@@ -17,3 +17,7 @@ run:
 
 worker:
 	poetry run python manage.py qcluster
+
+
+test:
+	poetry run pytest --cov=core tests
