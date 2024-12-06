@@ -55,7 +55,7 @@ jobs:
           POSTGRES_NAME: postgres
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_HOST: localhost
+          POSTGRES_HOST: postgres
           POSTGRES_PORT: 5432
 
           UNSTRUCTURED_API_URL: https://api.unstructured.io/general/v0/general
