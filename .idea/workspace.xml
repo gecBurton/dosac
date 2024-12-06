@@ -38,7 +38,7 @@
     "DefaultHtmlFileTemplate": "HTML File",
     "Python tests.pytest for tests.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "feature/added-logging-to-doc-search",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
