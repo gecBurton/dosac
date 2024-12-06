@@ -20,6 +20,8 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          - 5432:5432
 
     runs-on: ubuntu-latest
 
@@ -45,22 +47,19 @@ jobs:
 
     - name: Run Tests
       env:
-          LLM_MODEL: gpt-4o-mini
-          LLM_MODEL_PROVIDER: openai
-          EMBEDDING_MODEL: text-embedding-3-large
-
-          OPENAI_API_VERSION: 2024-02-01
-          OPENAI_API_KEY: insecure
-
-          POSTGRES_NAME: postgres
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_HOST: postgres
-          POSTGRES_PORT: 5432
-
-          UNSTRUCTURED_API_URL: https://api.unstructured.io/general/v0/general
-          UNSTRUCTURED_API_KEY: insecure
-          SECRET_KEY: django-insecure
+        LLM_MODEL: gpt-4o-mini
+        LLM_MODEL_PROVIDER: openai
+        EMBEDDING_MODEL: text-embedding-3-large
+        OPENAI_API_VERSION: 2024-02-01
+        OPENAI_API_KEY: insecure
+        POSTGRES_NAME: postgres
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_HOST: postgres
+        POSTGRES_PORT: 5432
+        UNSTRUCTURED_API_URL: https://api.unstructured.io/general/v0/general
+        UNSTRUCTURED_API_KEY: insecure
+        SECRET_KEY: django-insecure
 
       run: make test
 
