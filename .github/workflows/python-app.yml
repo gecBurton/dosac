@@ -10,22 +10,15 @@ on:
 
 jobs:
   static_checks:
-    services:
-      postgres:
-        image: ankane/pgvector
-        env:
-          POSTGRES_PASSWORD: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
 
     runs-on: ubuntu-latest
 
     steps:
+
+    - name: Build Containers
+      run: |
+        docker compose up -d --wait postgres minio
+
     - uses: actions/checkout@v3
 
     - name: Set up Python 3.12
