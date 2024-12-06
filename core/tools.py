@@ -55,7 +55,11 @@ def search_documents(query: str, top_k_results: int = 3) -> tuple[str, list[Docu
     ).order_by("distance")[:top_k_results]
 
     logger.info(f"converting {results.count()} docs to langchain")
-    documents = [x.to_langchain() for x in results]
+    try:
+        documents = [x.to_langchain() for x in results]
+    except Exception as e:
+        logger.error(e)
+        documents = []
     logger.info(f"converted {len(documents)} docs to langchain")
     try:
         a, b = "\n\n".join(document.page_content for document in documents), documents
