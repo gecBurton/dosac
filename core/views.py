@@ -18,13 +18,6 @@ User = get_user_model()
 
 
 @login_required
-def document_list(request):
-    documents = Document.objects.filter(user=request.user)
-    context = {"documents": documents}
-    return render(request, "core/document-list.html", context)
-
-
-@login_required
 def document_detail(request, pk: UUID, page_number: int = 1):
     document = get_object_or_404(Document, pk=pk, user=request.user)
     elements = document.embedding_set.filter(metadata__page_number=page_number)
