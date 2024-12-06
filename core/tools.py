@@ -56,9 +56,14 @@ def search_documents(query: str, top_k_results: int = 3) -> tuple[str, list[Docu
 
     logger.info(f"converting {results.count()} docs to langchain")
     documents = [x.to_langchain() for x in results]
-    a, b = "\n\n".join(document.page_content for document in documents), documents
-    logger.info("retuning results")
-    return a, b
+    logger.info(f"converted {len(documents)} docs to langchain")
+    try:
+        a, b = "\n\n".join(document.page_content for document in documents), documents
+        logger.info("retuning results")
+        return a, b
+    except Exception as e:
+        logger.error(e)
+        return "No docs found", []
 
 
 @tool(response_format="content_and_artifact")
