@@ -9,12 +9,10 @@ from sesame.views import LoginView
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("sesame/login/", LoginView.as_view(), name="sesame-login"),
-    path("document/", views.document_list, name="document-list"),
-    path("document/<uuid:pk>/", views.document_detail, name="document-detail"),
     path(
         "document/<uuid:pk>/page/<int:page_number>/",
         views.document_detail,
-        name="document-detail-page",
+        name="document-detail",
     ),
     path("chat/", views.chat_new, name="chat-new"),
     path("chat/<uuid:pk>/", views.chat_detail, name="chat-detail"),

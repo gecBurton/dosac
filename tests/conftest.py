@@ -1,8 +1,8 @@
 import pytest
-import pytest_asyncio
 from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
 
-from core.models import Chat, ChatMessage
+from core.models import Chat, ChatMessage, Document
 
 User = get_user_model()
 
@@ -30,15 +30,10 @@ def chat_message(chat):
     _message.delete()
 
 
-@pytest_asyncio.fixture
-async def auser():
-    _user = await User.objects.acreate(email="whatever@somewhere.com")
-    yield _user
-    await _user.adelete()
-
-
-@pytest_asyncio.fixture
-async def achat(auser):
-    _chat = await Chat.objects.acreate(user=auser)
-    yield _chat
-    await _chat.adelete()
+@pytest.fixture
+def user_document(user):
+    document = Document.objects.create(
+        user=user, file=SimpleUploadedFile(name="hello.txt", content=b"hello!")
+    )
+    yield document
+    document.delete()

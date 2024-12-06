@@ -5,8 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="39ae206b-4e48-458b-a9df-a8fbeb2d6134" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/tests/test_views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/templates/core/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/templates/core/chat.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/chat.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/templates/core/document-detail.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/templates/core/document-list.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/templates/core/document.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/document.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dosac/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/dosac/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dosac/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/dosac/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,8 +24,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -38,7 +46,7 @@
     "DefaultHtmlFileTemplate": "HTML File",
     "Python tests.pytest for tests.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "feature/test-views",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
@@ -79,5 +87,16 @@
       <updated>1733329896033</updated>
     </task>
     <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/tests/test_views.py</url>
+          <line>34</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
