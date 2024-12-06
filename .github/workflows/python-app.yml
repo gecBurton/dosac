@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: debug
+      run: ls
 
     - name: Build Containers
       run: |
