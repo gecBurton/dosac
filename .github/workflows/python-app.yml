@@ -44,5 +44,23 @@ jobs:
       run: make format
 
     - name: Run Tests
+      env:
+          LLM_MODEL: gpt-4o-mini
+          LLM_MODEL_PROVIDER: openai
+          EMBEDDING_MODEL: text-embedding-3-large
+
+          OPENAI_API_VERSION: 2024-02-01
+          OPENAI_API_KEY: insecure
+
+          POSTGRES_NAME: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+
+          UNSTRUCTURED_API_URL: https://api.unstructured.io/general/v0/general
+          UNSTRUCTURED_API_KEY: insecure
+          SECRET_KEY: django-insecure
+
       run: make test
 
