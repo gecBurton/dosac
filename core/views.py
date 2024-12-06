@@ -48,7 +48,7 @@ def chat_detail(request, pk: UUID):
     )
 
 
-def magic(request):
+def login(request):
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():

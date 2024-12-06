@@ -1,8 +1,6 @@
 import os
-from uuid import UUID
 
 from langchain.chat_models import init_chat_model
-from langchain_core.messages import AnyMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableLambda
 from langchain_openai import OpenAIEmbeddings
@@ -84,11 +82,6 @@ def citations(state):
     return subgraph.invoke(
         {"response": state["messages"][-1].content, "artifacts": sum(artifacts, [])}
     )
-
-
-class ChatMessage(BaseModel):
-    chat_id: UUID | None = None
-    message: AnyMessage
 
 
 def to_json(obj):

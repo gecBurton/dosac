@@ -171,4 +171,4 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 LOGIN_URL = "/sesame/login/"
-LOGIN_REDIRECT_URL = "/chat/"
+LOGIN_REDIRECT_URL = "/"
