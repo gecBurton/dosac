@@ -22,7 +22,7 @@ def document_detail(request, pk: UUID, page_number: int = 1):
     document = get_object_or_404(Document, pk=pk, user=request.user)
     elements = document.embedding_set.filter(metadata__page_number=page_number)
     context = {"document": document, "elements": elements, "page_number": page_number}
-    return render(request, "core/page.html", context)
+    return render(request, "core/document.html", context)
 
 
 @login_required
