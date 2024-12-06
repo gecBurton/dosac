@@ -9,7 +9,7 @@ on:
 
 
 jobs:
-  static_checks:
+  checks:
 
     runs-on: ubuntu-latest
 
