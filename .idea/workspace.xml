@@ -7,9 +7,11 @@
     <list default="true" id="39ae206b-4e48-458b-a9df-a8fbeb2d6134" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/tests/test_views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/templates/core/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/templates/core/chat.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/chat.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/templates/core/document-detail.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/core/templates/core/document-list.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/templates/core/page.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/document.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/templates/core/document.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/document.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dosac/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/dosac/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />

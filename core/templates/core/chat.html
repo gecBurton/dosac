@@ -1,6 +1,55 @@
 {% extends "core/base.html" %}
 
 {% block content %}
+<script>
+let buffer = '';
+document.addEventListener('DOMContentLoaded', function () {
+   var elements = document.querySelectorAll('.aiMessage');
+
+   elements.forEach(function (element) {
+       var markdownText = element.textContent; // Get the Markdown text
+       var htmlContent = marked.parse(markdownText); // Convert to HTML
+       element.innerHTML = htmlContent; // Replace the content
+   });
+});
+</script>
+<script>
+const socket = new WebSocket('{{ scheme }}://' + window.location.host + '/chat/');
+
+socket.onmessage = function(e) {
+    const message = JSON.parse(e.data);
+    const messages = document.getElementById('messages');
+    const lastMessage = messages.lastChild;
+
+    if (message.event == 'on_chat_model_stream') {
+        buffer += message.data.chunk.content;
+        lastMessage.innerHTML = marked.parse(buffer);
+    } else {
+        console.log(message);
+    }
+};
+
+function sendMessage() {
+    const messages = document.getElementById('messages');
+    const input = document.getElementById('messageInput');
+
+    const userMessage = document.createElement("div");
+    userMessage.innerHTML = '<b>@me: ' + input.value + '</b>';
+    userMessage.className = "aiMessage";
+    messages.appendChild(userMessage);
+
+    const aiMessage = document.createElement("div");
+    aiMessage.className = "aiMessage";
+    aiMessage.innerHTML = '@malcom.tucker: ';
+    messages.appendChild(aiMessage);
+
+    socket.send(JSON.stringify({'chat_id': '{{ chat.pk }}', 'message': {'content': input.value, 'type': 'human'}}));
+    input.value = '';
+
+    buffer = '';
+}
+</script>
+
 <div class="govuk-width-container">
   <main class="govuk-main-wrapper">
     <div class="govuk-grid-row">

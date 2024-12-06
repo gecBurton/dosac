@@ -1,5 +1,4 @@
-<html lang="en">
-
+{% extends "core/base.html" %}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 {% load static %}
@@ -11,41 +10,48 @@
 
 
 
-    // Asynchronously download PDF
-    const loadingTask = pdfjsLib.getDocument(url);
-    loadingTask.promise.then(pdf => {
-        console.log('PDF loaded');
+  // Asynchronously download PDF
+  const loadingTask = pdfjsLib.getDocument(url);
+  loadingTask.promise.then(pdf => {
+      console.log('PDF loaded');
 
-        // Fetch the first page
-        const pageNumber = {{ page_number }};
-        pdf.getPage(pageNumber).then(page => {
-            console.log('Page loaded');
+      // Fetch the first page
+      const pageNumber = {
+          {
+              page_number
+          }
+      };
+      pdf.getPage(pageNumber).then(page => {
+          console.log('Page loaded');
 
-            const scale = 0.5;
-            const viewport = page.getViewport({ scale });
+          const scale = 0.5;
+          const viewport = page.getViewport({
+              scale
+          });
 
-            // Prepare canvas using PDF page dimensions
-            const canvas = document.getElementById('pdf-canvas');
-            const context = canvas.getContext('2d');
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
+          // Prepare canvas using PDF page dimensions
+          const canvas = document.getElementById('pdf-canvas');
+          const context = canvas.getContext('2d');
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
 
-            // Render PDF page into canvas context
-            const renderContext = {
-                canvasContext: context,
-                viewport: viewport
-            };
-            const renderTask = page.render(renderContext);
-            renderTask.promise.then(() => {
-                console.log('Page rendered');
-            });
-        });
-    }, reason => {
-        console.error('Error loading PDF: ' + reason);
-    });
+          // Render PDF page into canvas context
+          const renderContext = {
+              canvasContext: context,
+              viewport: viewport
+          };
+          const renderTask = page.render(renderContext);
+          renderTask.promise.then(() => {
+              console.log('Page rendered');
+          });
+      });
+  }, reason => {
+      console.error('Error loading PDF: ' + reason);
+  });
 </script>
 
-<body>
+{% block content %}
+
 Document name = {{ document.created_at }} .
 
 <canvas id="pdf-canvas"></canvas>
@@ -53,5 +59,5 @@ Document name = {{ document.created_at }} .
 {% for element in elements %}
     <p>{{ element.text }}</p>
 {% endfor %}
-</body>
-</html>
+
+{% endblock %}
