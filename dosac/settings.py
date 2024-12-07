@@ -195,6 +195,7 @@ AUTHENTICATION_BACKENDS = [
     "sesame.backends.ModelBackend",
 ]
 
+AUTHENTICATION_URL = "sesame/login/"
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/"
 
