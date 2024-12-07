@@ -6,11 +6,12 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.db import IntegrityError
 from django.db.models import Count
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 
-from core.forms import LoginForm
+from core.forms import LoginForm, UploadFileForm
 from core.models import Document, Chat
 from sesame.utils import get_query_string
 
@@ -34,12 +35,24 @@ def chat_new(request):
 
 @login_required
 def chat_detail(request, pk: UUID):
+    error = None
+    if request.method == "POST":
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                Document.objects.create(file=request.FILES["file"], user=request.user)
+            except IntegrityError:
+                error = "file with this name already exists"
+        else:
+            error = " ".join(form.errors)
+
+    file_upload_form = UploadFileForm()
     chat = get_object_or_404(Chat, pk=pk, user=request.user)
 
     chat_history = (
         Chat.objects.annotate(message_count=Count("chatmessage"))
         .filter(user=request.user, message_count__gte=1)
-        .order_by("-created_at")
+        .order_by("-created_at")[:10]
     )
 
     return render(
@@ -49,6 +62,8 @@ def chat_detail(request, pk: UUID):
             "chat": chat,
             "chat_history": chat_history,
             "scheme": settings.WEBSOCKET_SCHEME,
+            "file_upload_form": file_upload_form,
+            "error": error,
         },
     )
 

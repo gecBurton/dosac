@@ -63,7 +63,10 @@ def list_documents(
 ) -> tuple[str, list[dict[str, str]]]:
     """returns a list of the users documents by exact name"""
     docs = list(DocumentModel.objects.filter(user_id=user_id))
-    metadata = [{"uri": doc.file.url, "name": doc.file.name} for doc in docs]
+    metadata = [
+        {"uri": doc.file.url, "name": doc.file.name, "status": doc.status}
+        for doc in docs
+    ]
     return "\n".join(doc.file.name for doc in docs), metadata
 
 
