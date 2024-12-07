@@ -45,15 +45,6 @@ class CoreUserManager(UserManager):
         return self._create_user(email, password, **extra_fields)
 
 
-class User(AbstractUser):
-    username = None
-    email = models.EmailField("email address", blank=True, unique=True)
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
-
-    objects = CoreUserManager()
-
-
 class BaseModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -62,6 +53,15 @@ class BaseModel(models.Model):
     class Meta:
         abstract = True
         ordering = ["created_at"]
+
+
+class User(AbstractUser, BaseModel):
+    username = None
+    email = models.EmailField("email address", blank=True, unique=True)
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
+
+    objects = CoreUserManager()
 
 
 class Document(BaseModel):
@@ -137,7 +137,7 @@ class Document(BaseModel):
             )
 
     @classmethod
-    def delete_by_name(cls, user_id, exact_document_name: str) -> bool:
+    def delete_by_name(cls, user_id: uuid.UUID, exact_document_name: str) -> bool:
         try:
             cls.objects.get(user_id=user_id, file=exact_document_name).delete()
         except cls.DoesNotExist:
@@ -170,7 +170,7 @@ class Embedding(BaseModel):
 
     @classmethod
     def search_by_vector(
-        cls, user_id: str, embedded_query: list[float], top_k_results: int = 3
+        cls, user_id: uuid.UUID, embedded_query: list[float], top_k_results: int = 3
     ) -> list:
         results = (
             cls.objects.filter(document__user_id=user_id)

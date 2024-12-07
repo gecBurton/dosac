@@ -1,5 +1,6 @@
 from logging import getLogger
 from typing import Annotated, Literal
+from uuid import UUID
 
 import wikipedia
 from django.contrib.auth import get_user_model
@@ -45,7 +46,7 @@ def search_wikipedia(
 
 @tool(response_format="content_and_artifact")
 def search_documents(
-    user_id: Annotated[str, InjectedState("user_id")],
+    user_id: Annotated[UUID, InjectedState("user_id")],
     query: str,
     top_k_results: int = 3,
 ) -> tuple[str, list[Document]]:
@@ -59,7 +60,7 @@ def search_documents(
 
 @tool(response_format="content_and_artifact")
 def list_documents(
-    user_id: Annotated[str, InjectedState("user_id")],
+    user_id: Annotated[UUID, InjectedState("user_id")],
 ) -> tuple[str, list[dict[str, str]]]:
     """returns a list of the users documents by exact name"""
     docs = list(DocumentModel.objects.filter(user_id=user_id))
@@ -70,15 +71,17 @@ def list_documents(
     return "\n".join(doc.file.name for doc in docs), metadata
 
 
-async def build_delete_document(user_id):
+async def build_delete_document(user_id: UUID):
     file_names = [
         doc.file.name async for doc in DocumentModel.objects.filter(user_id=user_id)
     ]
 
+    file_name_type = Literal[*file_names] if file_names else str
+
     @tool
     def delete_document(
-        user_id: Annotated[str, InjectedState("user_id")],
-        exact_document_name: Literal[*file_names],
+        user_id: Annotated[UUID, InjectedState("user_id")],
+        exact_document_name: file_name_type,
     ) -> bool:
         """delete a document give the exact_document_name,
         returns True if the document was found else False
@@ -92,7 +95,7 @@ async def build_delete_document(user_id):
 
 @tool
 def list_chats(
-    user_id: Annotated[str, InjectedState("user_id")],
+    user_id: Annotated[UUID, InjectedState("user_id")],
 ) -> list[list[Document]]:
     """returns a list of previous chats"""
     return [chat.to_langchain() for chat in Chat.objects.filter(user_id=user_id)]
