@@ -6,7 +6,7 @@ from django.contrib.auth.hashers import make_password
 from django.db import models
 from django.urls import reverse
 from langchain_core.messages import AnyMessage, AIMessage, HumanMessage
-from pgvector.django import VectorField
+from pgvector.django import VectorField, CosineDistance
 from langchain_core.documents import Document as LangchainDocument
 
 import requests
@@ -135,6 +135,17 @@ class Embedding(BaseModel):
             page_content=str(self.text),
             metadata=dict(self.metadata, index=self.index, url=self.get_uri()),
         )
+
+    @classmethod
+    def search_by_vector(
+        cls, user_id: str, embedded_query: list[float], top_k_results: int = 3
+    ) -> list:
+        results = (
+            cls.objects.filter(document__user_id=user_id)
+            .annotate(distance=CosineDistance("embedding", embedded_query))
+            .order_by("distance")[:top_k_results]
+        )
+        return [result.to_langchain() for result in results]
 
     def __str__(self):
         return f"{self.document.file.name}.{self.index}"
