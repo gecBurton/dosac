@@ -8,7 +8,7 @@ from sesame.views import LoginView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("sesame/login/", LoginView.as_view(), name="sesame-login"),
+    path(settings.AUTHENTICATION_URL, LoginView.as_view(), name="sesame-login"),
     path(
         "document/<uuid:pk>/page/<int:page_number>/",
         views.document_detail,

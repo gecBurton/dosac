@@ -62,7 +62,8 @@ def login(request):
                 user = User.objects.get(email=email)
                 host = request.get_host()
                 token = get_query_string(user)
-                message = f"click here to login: {settings.HTTP_SCHEME}://{host}{settings.LOGIN_URL}{token}"
+                magic_link = f"{settings.HTTP_SCHEME}://{host}/{settings.AUTHENTICATION_URL}{token}"
+                message = f"click here to login: {magic_link}"
                 send_mail("dosac login", message, settings.EMAIL_HOST_USER, [email])
                 logger.info(message)
             except User.DoesNotExist:

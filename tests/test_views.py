@@ -19,10 +19,10 @@ def test_login(client, user, mailoutbox):
     assert login_response.status_code == 302
     assert login_response.url == "/email-sent/"
 
-    intro, link = mailoutbox[-1].body.split(":", 1)
-    assert intro == "click here to login"
+    _, link = mailoutbox[-1].body.split(":", 1)
     magic_link_response = client.get(link.strip())
-    assert magic_link_response.status_code == 200
+    assert magic_link_response.status_code == 302
+    assert magic_link_response.url == "/"
 
 
 @pytest.mark.django_db
