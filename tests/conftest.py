@@ -1,10 +1,20 @@
+import math
+
 import pytest
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from core.models import Chat, ChatMessage, Document
+from core.models import Chat, ChatMessage, Document, Embedding
 
 User = get_user_model()
+
+SQRT_2_PI = math.sqrt(2.0 * math.pi)
+
+
+def gaussian(x: float, mu: float = 0, sigma: float = 1) -> float:
+    numerator = math.exp(-math.pow((x - mu) / sigma, 2) / 2)
+    denominator = SQRT_2_PI * sigma
+    return numerator / denominator
 
 
 @pytest.fixture
@@ -37,3 +47,17 @@ def user_document(user):
     )
     yield document
     document.delete()
+
+
+@pytest.fixture
+def user_embedded_document(user_document):
+    for index in range(10):
+        Embedding.objects.create(
+            document=user_document,
+            text=f"example text #{index}",
+            embedding=[gaussian(i, index) for i in range(3072)],
+            index=index,
+            metadata={"page_number": 1},
+        )
+
+    yield user_document

@@ -5,6 +5,7 @@ from langchain_core.messages import (
     HumanMessage,
 )
 from langgraph.prebuilt import create_react_agent
+from langgraph.prebuilt.chat_agent_executor import AgentState
 
 from core.ai_core import get_chat_llm, citations, SYSTEM_PROMPT, to_json
 from core.models import Chat, ChatMessage as ChatMessageModel, Citation as CitationModel
@@ -16,6 +17,19 @@ from core.tools import (
 )
 
 
+class Schema(AgentState):
+    user_id: str
+
+
+agent = create_react_agent(
+    get_chat_llm(),
+    tools=[search_wikipedia, search_documents, list_documents, delete_document],
+    state_schema=Schema,
+)
+
+graph = agent | {"citations": citations}
+
+
 class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def disconnect(self, close_code):
         # Handle disconnection
@@ -23,11 +37,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     async def receive_json(self, content, **kwargs):
         chat_id = self.scope["url_route"]["kwargs"]["chat_id"]
-
-        agent = create_react_agent(
-            get_chat_llm(),
-            tools=[search_wikipedia, search_documents, list_documents, delete_document],
-        )
+        user = self.scope["user"]
 
         message = HumanMessage.model_validate(content)
 
@@ -35,13 +45,14 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
         await sync_to_async(ChatMessageModel.from_langchain)(chat=chat, message=message)
 
-        graph = agent | {"citations": citations}
-
         messages = await sync_to_async(chat.to_langchain)()
         answer: ChatMessageModel | None = None
 
         async for event in graph.astream_events(
-            {"messages": [SystemMessage(content=SYSTEM_PROMPT), *messages]},
+            {
+                "messages": [SystemMessage(content=SYSTEM_PROMPT), *messages],
+                "user_id": str(user.id),
+            },
             stream_mode="values",
             version="v2",
         ):
