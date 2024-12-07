@@ -14,7 +14,6 @@ from langchain_core.documents import Document as LangchainDocument
 import requests
 
 from django.contrib.auth.models import AbstractUser, UserManager
-from django_q.tasks import async_task
 
 from core.ai_core import get_embedding_model
 
@@ -81,10 +80,6 @@ class Document(BaseModel):
 
     def __str__(self):
         return self.file.name
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        async_task(self.generate_elements)
 
     def generate_elements(self):
         try:
