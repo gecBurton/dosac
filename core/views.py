@@ -10,6 +10,7 @@ from django.db import IntegrityError
 from django.db.models import Count
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
+from django_q.tasks import async_task
 
 from core.forms import LoginForm, UploadFileForm
 from core.models import Document, Chat
@@ -40,7 +41,11 @@ def chat_detail(request, pk: UUID):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             try:
-                Document.objects.create(file=request.FILES["file"], user=request.user)
+                document = Document.objects.create(
+                    file=request.FILES["file"], user=request.user
+                )
+                async_task(document.generate_elements)
+
             except IntegrityError:
                 error = "file with this name already exists"
         else:

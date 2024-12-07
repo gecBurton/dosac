@@ -188,6 +188,7 @@ Q_CLUSTER = {
     "queue_limit": 50,
     "bulk": 10,
     "orm": "default",
+    "max_attempts": 1,
 }
 
 AUTHENTICATION_BACKENDS = [
