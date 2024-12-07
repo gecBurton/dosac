@@ -54,7 +54,7 @@ function sendMessage() {
   <main class="govuk-main-wrapper">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-third">
-          <h3 class="govuk-heading-s">your previous chats</h3>
+          <h3 class="govuk-heading-s">Previous chats</h3>
           <ul class="govuk-list">
             {% for chat in chat_history %}
             <li>
@@ -69,7 +69,6 @@ function sendMessage() {
           <form action="{% url 'chat-detail' chat.pk %}" method="post" enctype="multipart/form-data">
           {% csrf_token %}
               <div class="govuk-form-group">
-                  <label class="govuk-label" for="id_file">Upload a file</label>
                   {% if error %}
                       <p id="file-upload-1-error" class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> {{ error }}</p>
                       <input class="govuk-file-upload " id="file-upload-1" name="fileUpload1" type="file" aria-describedby="file-upload-1-error">

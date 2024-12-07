@@ -12,22 +12,13 @@ from core.models import Chat, ChatMessage as ChatMessageModel, Citation as Citat
 from core.tools import (
     search_documents,
     list_documents,
-    delete_document,
+    build_delete_document,
     search_wikipedia,
 )
 
 
 class Schema(AgentState):
     user_id: str
-
-
-agent = create_react_agent(
-    get_chat_llm(),
-    tools=[search_wikipedia, search_documents, list_documents, delete_document],
-    state_schema=Schema,
-)
-
-graph = agent | {"citations": citations}
 
 
 class ChatConsumer(AsyncJsonWebsocketConsumer):
@@ -38,6 +29,15 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def receive_json(self, content, **kwargs):
         chat_id = self.scope["url_route"]["kwargs"]["chat_id"]
         user = self.scope["user"]
+
+        delete_document = await build_delete_document(str(user.id))
+        agent = create_react_agent(
+            get_chat_llm(),
+            tools=[search_wikipedia, search_documents, list_documents, delete_document],
+            state_schema=Schema,
+        )
+
+        graph = agent | {"citations": citations}
 
         message = HumanMessage.model_validate(content)
 
