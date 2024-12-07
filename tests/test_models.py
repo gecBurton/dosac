@@ -75,6 +75,7 @@ def test_embedding_search_by_vector(user_embedded_document):
 def test_document_status_processing(user_document):
     assert user_document.status == "PROCESSING"
 
+
 @pytest.mark.django_db
 def test_document_status_complete(user_embedded_document):
     assert user_embedded_document.status == "COMPLETE"

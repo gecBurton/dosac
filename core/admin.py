@@ -17,6 +17,7 @@ def generate_elements(modeladmin, request, queryset):
 
 
 class DocumentAdmin(admin.ModelAdmin):
+    list_display = ["file", "status"]
     exclude = ["embeddings"]
     actions = [generate_elements]
     inlines = [EmbeddingInline]
