@@ -1,5 +1,5 @@
 from logging import getLogger
-from typing import Annotated
+from typing import Annotated, Literal
 
 import wikipedia
 from django.contrib.auth import get_user_model
@@ -70,18 +70,24 @@ def list_documents(
     return "\n".join(doc.file.name for doc in docs), metadata
 
 
-@tool
-def delete_document(
-    user_id: Annotated[str, InjectedState("user_id")], exact_document_name: str
-) -> bool:
-    """delete a document give the exact_document_name,
-    returns True if the document was found else False
-    """
-    try:
-        DocumentModel.objects.get(user_id=user_id, file=exact_document_name).delete()
-    except DocumentModel.DoesNotExist:
-        return False
-    return True
+async def build_delete_document(user_id):
+    file_names = [
+        doc.file.name async for doc in DocumentModel.objects.filter(user_id=user_id)
+    ]
+
+    @tool
+    def delete_document(
+        user_id: Annotated[str, InjectedState("user_id")],
+        exact_document_name: Literal[*file_names],
+    ) -> bool:
+        """delete a document give the exact_document_name,
+        returns True if the document was found else False
+        """
+        return DocumentModel.delete_by_name(
+            user_id=user_id, exact_document_name=exact_document_name
+        )
+
+    return delete_document
 
 
 @tool

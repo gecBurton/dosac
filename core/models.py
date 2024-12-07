@@ -1,4 +1,6 @@
+import textwrap
 import uuid
+from logging import getLogger
 from typing import Self, Literal
 
 from django.conf import settings
@@ -15,6 +17,9 @@ from django.contrib.auth.models import AbstractUser, UserManager
 from django_q.tasks import async_task
 
 from core.ai_core import get_embedding_model
+
+
+logger = getLogger(__name__)
 
 
 class CoreUserManager(UserManager):
@@ -131,6 +136,14 @@ class Document(BaseModel):
                 metadata=metadata,
             )
 
+    @classmethod
+    def delete_by_name(cls, user_id, exact_document_name: str) -> bool:
+        try:
+            cls.objects.get(user_id=user_id, file=exact_document_name).delete()
+        except cls.DoesNotExist:
+            return False
+        return True
+
 
 class Embedding(BaseModel):
     document = models.ForeignKey(Document, on_delete=models.CASCADE)
@@ -175,7 +188,7 @@ class Chat(BaseModel):
 
     def __str__(self):
         if first_message := self.chatmessage_set.first():
-            return first_message.content
+            return textwrap.shorten(first_message.content, 80, placeholder="...")
         return "..."
 
     def to_langchain(self) -> list[AnyMessage]:

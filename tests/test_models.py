@@ -1,7 +1,7 @@
 import pytest
 from langchain_core.messages import AIMessage, HumanMessage
 
-from core.models import ChatMessage, Citation, Embedding
+from core.models import ChatMessage, Citation, Embedding, Document
 from tests.conftest import gaussian
 
 
@@ -86,3 +86,8 @@ def test_document_status_error(user_document):
     user_document.processing_error = "some error"
     user_document.save()
     assert user_document.status == "ERROR"
+
+
+@pytest.mark.django_db
+def test_document_delete_by_name(user_document):
+    assert Document.delete_by_name(user_document.user, user_document.file.name)
