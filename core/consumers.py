@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from langchain_core.messages import (
@@ -18,7 +20,7 @@ from core.tools import (
 
 
 class Schema(AgentState):
-    user_id: str
+    user_id: UUID
 
 
 class ChatConsumer(AsyncJsonWebsocketConsumer):
@@ -30,7 +32,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         chat_id = self.scope["url_route"]["kwargs"]["chat_id"]
         user = self.scope["user"]
 
-        delete_document = await build_delete_document(str(user.id))
+        delete_document = await build_delete_document(user.id)
         agent = create_react_agent(
             get_chat_llm(),
             tools=[search_wikipedia, search_documents, list_documents, delete_document],
@@ -51,7 +53,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         async for event in graph.astream_events(
             {
                 "messages": [SystemMessage(content=SYSTEM_PROMPT), *messages],
-                "user_id": str(user.id),
+                "user_id": user.id,
             },
             stream_mode="values",
             version="v2",

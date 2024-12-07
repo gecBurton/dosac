@@ -86,7 +86,7 @@ def citations(state):
 
 def to_json(obj):
     if isinstance(obj, dict):
-        return {k: to_json(v) for k, v in obj.items() if k != "user"}
+        return {k: to_json(v) for k, v in obj.items() if k != "user_id"}
     if isinstance(obj, list):
         return list(map(to_json, obj))
     if hasattr(obj, "model_dump"):
