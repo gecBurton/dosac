@@ -1,5 +1,5 @@
 import uuid
-from typing import Self
+from typing import Self, Literal
 
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
@@ -62,6 +62,17 @@ class BaseModel(models.Model):
 class Document(BaseModel):
     file = models.FileField(unique=True, upload_to="uploads")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    processing_error = models.TextField(
+        blank=True, null=True, help_text="error encountered during processing"
+    )
+
+    @property
+    def status(self) -> Literal["ERROR", "COMPLETE", "PROCESSING"]:
+        if self.processing_error is not None:
+            return "ERROR"
+        if self.embedding_set.exists():
+            return "COMPLETE"
+        return "PROCESSING"
 
     def __str__(self):
         return self.file.name
@@ -71,6 +82,14 @@ class Document(BaseModel):
         async_task(self.generate_elements)
 
     def generate_elements(self):
+        try:
+            self._generate_elements()
+            self.processing_error = None
+        except Exception as e:
+            self.processing_error = str(e)
+        self.save()
+
+    def _generate_elements(self):
         headers = {
             "accept": "application/json",
             "unstructured-api-key": settings.UNSTRUCTURED_API_KEY,

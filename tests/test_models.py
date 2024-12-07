@@ -69,3 +69,19 @@ def test_embedding_search_by_vector(user_embedded_document):
     # And the next results to have an index equal to the nearest numbers
     assert actual_embeddings[1].metadata["index"] in (2, 4)
     assert actual_embeddings[2].metadata["index"] in (2, 4)
+
+
+@pytest.mark.django_db
+def test_document_status_processing(user_document):
+    assert user_document.status == "PROCESSING"
+
+@pytest.mark.django_db
+def test_document_status_complete(user_embedded_document):
+    assert user_embedded_document.status == "COMPLETE"
+
+
+@pytest.mark.django_db
+def test_document_status_error(user_document):
+    user_document.processing_error = "some error"
+    user_document.save()
+    assert user_document.status == "ERROR"
