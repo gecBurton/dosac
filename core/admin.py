@@ -6,7 +6,6 @@ from core.models import Document, Embedding, Chat, ChatMessage, Citation
 class EmbeddingInline(admin.StackedInline):
     model = Embedding
     extra = 0
-    exclude = ["embedding", "metadata"]
     ordering = ["index"]
 
 
@@ -34,7 +33,7 @@ class ChatAdmin(admin.ModelAdmin):
 
 
 class CitationAdmin(admin.ModelAdmin):
-    pass
+    list_display = ["id", "chat_message", "reference"]
 
 
 admin.site.register(Citation, CitationAdmin)

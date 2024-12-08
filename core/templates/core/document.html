@@ -1,12 +1,16 @@
 {% extends "core/base.html" %}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 {% load static %}
+
+{% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script type="module">
   // If absolute URL from the remote server is provided, configure the CORS
   // header on that server.
-
+  console.log("hello");
   const url = "{{ document.file.url }}"; // Use the file URL directly
+  console.log("url=" + url);
 
 
 
@@ -16,12 +20,7 @@
       console.log('PDF loaded');
 
       // Fetch the first page
-      const pageNumber = {
-          {
-              page_number
-          }
-      };
-      pdf.getPage(pageNumber).then(page => {
+      pdf.getPage({{ page_number }}).then(page => {
           console.log('Page loaded');
 
           const scale = 0.5;
@@ -50,7 +49,6 @@
   });
 </script>
 
-{% block content %}
 
 Document name = {{ document.created_at }} .
 

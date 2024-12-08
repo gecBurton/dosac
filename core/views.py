@@ -93,7 +93,12 @@ def login(request):
                 error = "try again later"
 
     form = LoginForm()
-    return render(request, "core/login.html", {"login_form": form, "error": error})
+    return render(
+        request,
+        "core/login.html",
+        {"login_form": form, "error": error},
+        status=400 if error else 200,
+    )
 
 
 def email_sent(request):

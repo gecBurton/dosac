@@ -239,6 +239,9 @@ class ChatMessage(BaseModel):
 
         return content
 
+    def __str__(self):
+        return textwrap.shorten(self.content, 64, placeholder="...")
+
 
 class Citation(models.Model):
     chat_message = models.ForeignKey(ChatMessage, on_delete=models.CASCADE)
@@ -249,7 +252,7 @@ class Citation(models.Model):
         help_text="Exact part of text from `source` that supports the `answer`"
     )
     reference = models.TextField(
-        help_text="reference to the source, could be a file-name, url or uri"
+        help_text="reference to the source, could be a url or uri"
     )
     index = models.PositiveIntegerField()
 
