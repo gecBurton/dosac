@@ -63,12 +63,12 @@ def citations(state):
     system_prompt = (
         "Given a response to a question and the sources that support it "
         "determine which parts of the response are supported by source "
-        "there is likely to be more than one part of the response to find a source for."
+        "there could be no, one or many parts of the response to find a source for."
         "\n\nHere is the response: "
         "{response}"
         "\n\nHere are the supporting source: "
         "{artifacts}"
-        "Do not guess or invent citations!"
+        "Do not guess! It is better to find no citations than invent them."
     )
 
     prompt = ChatPromptTemplate.from_messages([("system", system_prompt)])
