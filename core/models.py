@@ -171,7 +171,7 @@ class Embedding(BaseModel):
     def to_langchain(self) -> LangchainDocument:
         return LangchainDocument(
             page_content=str(self.text),
-            metadata=dict(url=self.get_uri()),
+            metadata=dict(url=self.get_uri(), index=self.index),
         )
 
     @classmethod
