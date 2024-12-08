@@ -2,4 +2,4 @@ for fun only
 
 based on https://github.com/i-dot-ai/redbox/
 
-![image](https://github.com/user-attachments/assets/10ff0bfb-25c4-4ea3-a27b-c9f247da180c)
+![image](https://github.com/user-attachments/assets/a95a56f9-3476-4e4d-a0a3-7ed7e3f502cc)
