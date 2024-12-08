@@ -20,4 +20,4 @@ worker:
 
 
 test:
-	poetry run pytest --cov=core tests
+	poetry run pytest --cov=core --cov-report term-missing tests

@@ -2,16 +2,26 @@
 
 {% block content %}
 
+<div class="govuk-warning-text">
+  <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+  <strong class="govuk-warning-text__text">
+    <span class="govuk-visually-hidden">Warning</span>
+    This site is a joke, don't be stupid and use it for work.
+  </strong>
+</div>
+
 <form action="{% url 'login' %}" method="post">
     {% csrf_token %}
     <div class="govuk-form-group">
       <label class="govuk-label" for="email">
         Email address
       </label>
-      <div id="email-hint" class="govuk-hint">
-          We’ll use this to send you a link to login.
-      </div>
-      <input class="govuk-input" id="email" name="email" type="email" spellcheck="false" aria-describedby="email-hint" autocomplete="email">
+        {% if error %}
+           <p id="email-hint" class="govuk-error-message"><span class="govuk-visually-hidden">Error:</span> {{ error }}</p>
+        {% else %}
+          <div id="email-hint" class="govuk-hint">We’ll use this to send you a link to login.</div>
+        {% endif %}
+        <input class="govuk-input" id="email" name="email" type="email" spellcheck="false" aria-describedby="email-hint" autocomplete="email">
     </div>
     <button type="submit" class="govuk-button" data-module="govuk-button">Send</button>
 </form>
