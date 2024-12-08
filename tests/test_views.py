@@ -7,7 +7,7 @@ from core.models import Document, Chat
 @pytest.mark.django_db
 def test_document_detail(client, user_document: Document):
     client.force_login(user_document.user)
-    url = reverse("document-detail", args=(user_document.pk, 1))
+    url = reverse("document-detail", args=(user_document.pk, 1, 1))
     response = client.get(url)
     assert response.status_code == 200
 

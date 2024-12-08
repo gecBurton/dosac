@@ -20,10 +20,15 @@ User = get_user_model()
 
 
 @login_required
-def document_detail(request, pk: UUID, page_number: int = 1):
+def document_detail(request, pk: UUID, page_number: int = 1, index: int | None = None):
     document = get_object_or_404(Document, pk=pk, user=request.user)
     elements = document.embedding_set.filter(metadata__page_number=page_number)
-    context = {"document": document, "elements": elements, "page_number": page_number}
+    context = {
+        "document": document,
+        "elements": elements,
+        "page_number": page_number,
+        "index": index,
+    }
     return render(request, "core/document.html", context)
 
 

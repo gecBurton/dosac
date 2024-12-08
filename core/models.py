@@ -159,19 +159,19 @@ class Embedding(BaseModel):
     metadata = models.JSONField()
 
     def get_uri(self):
-        # {self.index}/
         return reverse(
             "document-detail",
             kwargs={
                 "pk": self.document.pk,
                 "page_number": self.metadata["page_number"],
+                "index": self.index,
             },
         )
 
     def to_langchain(self) -> LangchainDocument:
         return LangchainDocument(
             page_content=str(self.text),
-            metadata=dict(self.metadata, index=self.index, url=self.get_uri()),
+            metadata=dict(url=self.get_uri(), index=self.index),
         )
 
     @classmethod

@@ -55,7 +55,11 @@ Document name = {{ document.created_at }} .
 <canvas id="pdf-canvas"></canvas>
 
 {% for element in elements %}
+    {% if element.index == index %}
+    <p><b>{{ element.text }}</b></p>
+    {% else %}
     <p>{{ element.text }}</p>
+    {% endif %}
 {% endfor %}
 
 {% endblock %}

@@ -10,7 +10,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path(settings.AUTHENTICATION_URL, LoginView.as_view(), name="sesame-login"),
     path(
-        "document/<uuid:pk>/page/<int:page_number>/",
+        "document/<uuid:pk>/page/<int:page_number>/index/<int:index>/",
         views.document_detail,
         name="document-detail",
     ),
