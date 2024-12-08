@@ -6,6 +6,7 @@ from typing import Self, Literal
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.db import models
+from django.db.models import Count
 from django.urls import reverse
 from langchain_core.messages import AnyMessage, AIMessage, HumanMessage
 from pgvector.django import VectorField, CosineDistance
@@ -62,6 +63,14 @@ class User(AbstractUser, BaseModel):
 
     objects = CoreUserManager()
 
+    def get_history(self, limit: int = 10):
+        _history = (
+            Chat.objects.annotate(message_count=Count("chatmessage"))
+            .filter(user=self, message_count__gte=1)
+            .order_by("-created_at")[:limit]
+        )
+        return _history
+
 
 class Document(BaseModel):
     file = models.FileField(unique=True, upload_to="uploads")
@@ -85,9 +94,11 @@ class Document(BaseModel):
         try:
             self._generate_elements()
             self.processing_error = None
+            self.save()
         except Exception as e:
             self.processing_error = str(e)
-        self.save()
+            self.save()
+            raise e
 
     def _generate_elements(self):
         headers = {

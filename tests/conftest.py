@@ -61,3 +61,19 @@ def user_embedded_document(user_document):
         )
 
     yield user_document
+
+
+@pytest.fixture
+def user_with_many_chat_messages(user):
+    chats = [Chat.objects.create(user=user) for _ in range(10)]
+
+    for i, chat in enumerate(chats):
+        for m in range(0, i):
+            ChatMessage.objects.create(
+                chat=chat, type=ChatMessage.TYPES.HUMAN, content="hello"
+            )
+
+    yield user
+
+    for chat in chats:
+        chat.delete()

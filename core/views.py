@@ -7,7 +7,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.db import IntegrityError
-from django.db.models import Count
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django_q.tasks import async_task
@@ -34,8 +33,7 @@ def chat_new(request):
     return redirect("chat-detail", pk=instance.pk)
 
 
-@login_required
-def chat_detail(request, pk: UUID):
+def upload_file(request):
     error = None
     if request.method == "POST":
         form = UploadFileForm(request.POST, request.FILES)
@@ -45,21 +43,20 @@ def chat_detail(request, pk: UUID):
                     file=request.FILES["file"], user=request.user
                 )
                 async_task(document.generate_elements)
-
             except IntegrityError:
                 error = "file with this name already exists"
         else:
             error = " ".join(form.errors)
+    return error
+
+
+@login_required
+def chat_detail(request, pk: UUID):
+    error = upload_file(request)
+    chat = get_object_or_404(Chat, pk=pk, user=request.user)
+    chat_history = request.user.get_history()
 
     file_upload_form = UploadFileForm()
-    chat = get_object_or_404(Chat, pk=pk, user=request.user)
-
-    chat_history = (
-        Chat.objects.annotate(message_count=Count("chatmessage"))
-        .filter(user=request.user, message_count__gte=1)
-        .order_by("-created_at")[:10]
-    )
-
     return render(
         request,
         "core/chat.html",
@@ -74,6 +71,7 @@ def chat_detail(request, pk: UUID):
 
 
 def login(request):
+    error = None
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -86,14 +84,16 @@ def login(request):
                 message = f"click here to login: {magic_link}"
                 send_mail("dosac login", message, settings.EMAIL_HOST_USER, [email])
                 logger.info(message)
+                return HttpResponseRedirect("/email-sent/")
             except User.DoesNotExist:
                 logger.warn(f"user={email} does not exist")
+                error = "email not recognized, contact the site administrator"
             except SMTPDataError as e:
                 logger.error(f"failed to send email to user={email}: {e}")
-            return HttpResponseRedirect("/email-sent/")
+                error = "try again later"
 
     form = LoginForm()
-    return render(request, "core/login.html", {"login_form": form})
+    return render(request, "core/login.html", {"login_form": form, "error": error})
 
 
 def email_sent(request):

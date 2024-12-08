@@ -91,3 +91,13 @@ def test_document_status_error(user_document):
 @pytest.mark.django_db
 def test_document_delete_by_name(user_document):
     assert Document.delete_by_name(user_document.user, user_document.file.name)
+
+
+@pytest.mark.django_db
+def test_model_get_history(user_with_many_chat_messages):
+    # Given a user with 10 chats with a 0 to 10 messages each
+    # When I call get_history(limit=5)
+    # I Expect 5 chats, all with more than 1 message returned
+    chats = user_with_many_chat_messages.get_history(limit=5)
+    assert len(chats) == 5
+    assert all(chat.chatmessage_set.count() > 1 for chat in chats)
