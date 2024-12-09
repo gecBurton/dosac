@@ -17,7 +17,7 @@ Inspired in equal measure by:
 
 ![image](https://github.com/user-attachments/assets/a95a56f9-3476-4e4d-a0a3-7ed7e3f502cc)
 
-How to run:
+### How to run:
 
 ```commandline
 docker compose up -d
