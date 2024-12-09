@@ -1,6 +1,6 @@
 Yet Another wrapper around GPT, written for fun and to explore if it is possible to have:
 
-* The simplest possible Text only - as far as possible all features are accessed via chat:
+* The simplest possible Text only Interface - as far as possible all features are accessed via chat:
   * wikipedia search
   * document selection, deletion, and search
   * help
