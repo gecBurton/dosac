@@ -9,7 +9,7 @@
   // If absolute URL from the remote server is provided, configure the CORS
   // header on that server.
   console.log("hello");
-  const url = "{{ document.file.url }}"; // Use the file URL directly
+  const url = "{{ embedding.document.file.url }}"; // Use the file URL directly
   console.log("url=" + url);
 
 
@@ -50,16 +50,10 @@
 </script>
 
 
-Document name = {{ document.created_at }} .
+Document name = {{ embedding.document.created_at }} .
 
 <canvas id="pdf-canvas"></canvas>
 
-{% for element in elements %}
-    {% if element.index == index %}
-    <p><b>{{ element.text }}</b></p>
-    {% else %}
-    <p>{{ element.text }}</p>
-    {% endif %}
-{% endfor %}
+<p><b>{{ embedding.text }}</b></p>
 
 {% endblock %}

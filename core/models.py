@@ -160,11 +160,9 @@ class Embedding(BaseModel):
 
     def get_uri(self):
         return reverse(
-            "document-detail",
+            "embedding-detail",
             kwargs={
-                "pk": self.document.pk,
-                "page_number": self.metadata["page_number"],
-                "index": self.index,
+                "pk": self.pk,
             },
         )
 
