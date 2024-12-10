@@ -7,8 +7,8 @@ from core.models import Document, Chat
 @pytest.mark.django_db
 def test_embedding_detail_detail(client, user_embedded_document: Document):
     client.force_login(user_embedded_document.user)
-    e = user_embedded_document.embedding_set.first()
-    url = reverse("embedding-detail", args=(e.pk,))
+    embedding = user_embedded_document.embedding_set.first()
+    url = reverse("embedding-detail", args=(embedding.pk,))
     response = client.get(url)
     assert response.status_code == 200
 
