@@ -19,7 +19,9 @@ jobs:
 
     - name: Build Containers
       run: |
-        ls
+        cp .env.example .env
+        sed -i -e "s/^POSTGRES_HOST=.*/POSTGRES_HOST=localhost/" .env
+        sed -i -e "s/^MINIO_HOST=.*/MINIO_HOST=localhost/" .env
         docker compose up -d --wait postgres minio
 
     - name: Set up Python 3.12
@@ -40,10 +42,5 @@ jobs:
       run: make format
 
     - name: Run Tests
-      run: |
-        cp .env.example .env
-        sed -i -e "s/^POSTGRES_HOST=.*/POSTGRES_HOST=localhost/" .env
-        sed -i -e "s/^MINIO_HOST=.*/MINIO_HOST=localhost/" .env
-        docker compose up -d minio postgres
-        make test
+      run: make test
 
