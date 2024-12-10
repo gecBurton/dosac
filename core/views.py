@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django_q.tasks import async_task
 
 from core.forms import LoginForm, UploadFileForm
-from core.models import Document, Chat
+from core.models import Document, Chat, Embedding
 from sesame.utils import get_query_string
 
 logger = getLogger(__name__)
@@ -20,14 +20,10 @@ User = get_user_model()
 
 
 @login_required
-def document_detail(request, pk: UUID, page_number: int = 1, index: int | None = None):
-    document = get_object_or_404(Document, pk=pk, user=request.user)
-    elements = document.embedding_set.filter(metadata__page_number=page_number)
+def embedding_detail(request, pk: UUID):
+    embedding = get_object_or_404(Embedding, pk=pk, document__user=request.user)
     context = {
-        "document": document,
-        "elements": elements,
-        "page_number": page_number,
-        "index": index,
+        "embedding": embedding,
     }
     return render(request, "core/document.html", context)
 

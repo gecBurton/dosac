@@ -5,9 +5,10 @@ from core.models import Document, Chat
 
 
 @pytest.mark.django_db
-def test_document_detail(client, user_document: Document):
-    client.force_login(user_document.user)
-    url = reverse("document-detail", args=(user_document.pk, 1, 1))
+def test_embedding_detail_detail(client, user_embedded_document: Document):
+    client.force_login(user_embedded_document.user)
+    e = user_embedded_document.embedding_set.first()
+    url = reverse("embedding-detail", args=(e.pk,))
     response = client.get(url)
     assert response.status_code == 200
 

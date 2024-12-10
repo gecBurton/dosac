@@ -10,9 +10,9 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path(settings.AUTHENTICATION_URL, LoginView.as_view(), name="sesame-login"),
     path(
-        "document/<uuid:pk>/page/<int:page_number>/index/<int:index>/",
-        views.document_detail,
-        name="document-detail",
+        "embedding/<uuid:pk>/",
+        views.embedding_detail,
+        name="embedding-detail",
     ),
     path("", views.chat_new, name="chat-new"),
     path("<uuid:pk>/", views.chat_detail, name="chat-detail"),
