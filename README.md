@@ -17,13 +17,9 @@ Inspired in equal measure by:
 
 ![image](https://github.com/user-attachments/assets/a95a56f9-3476-4e4d-a0a3-7ed7e3f502cc)
 
-### How to run:
+### How to run via docker:
 
-```commandline
-docker compose up -d
-make web
-make worker
-poetry run python manage createsuperuser
-```
-
-Then login via the admin http://localhost:8080/admin/ (or grep the logs looking for the magic link)
+1. create a .env file, see .env.example
+2. `docker compose up -d`
+3. `docker compose run python manage createsuperuser`
+4. Then login via the admin http://localhost:8080/admin/ (or grep the logs looking for the magic link)

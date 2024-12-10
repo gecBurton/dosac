@@ -51,7 +51,9 @@ else:
     AWS_S3_REGION_NAME = "eu-west-2"
     AWS_SECRET_ACCESS_KEY = os.environ["MINIO_SECRET_KEY"]
     AWS_STORAGE_BUCKET_NAME = os.environ["MINIO_BUCKET_NAME"]
-    AWS_S3_ENDPOINT_URL = "http://localhost:9000"
+    minio_host = os.environ["MINIO_HOST"]
+    minio_port = os.environ["MINIO_PORT"]
+    AWS_S3_ENDPOINT_URL = f"http://{minio_host}:{minio_port}"
 
     s3 = boto3.client(
         "s3",

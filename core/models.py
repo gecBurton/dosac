@@ -252,7 +252,7 @@ class Citation(models.Model):
         help_text="Exact part of text from `source` that supports the `answer`"
     )
     reference = models.TextField(
-        help_text="reference to the source, could be a url or uri"
+        help_text="reference to the source, could be a file-name, url or uri"
     )
     index = models.PositiveIntegerField()
 
