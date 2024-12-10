@@ -44,9 +44,7 @@ class Citation(BaseModel):
     text_in_source: str = Field(
         description="Exact part of text from `source` that supports the `answer`"
     )
-    reference: str = Field(
-        description="reference to the source, could be a file-name, url or uri"
-    )
+    reference: str = Field(description="reference to the source, could be a url or uri")
 
 
 class CitationList(BaseModel):

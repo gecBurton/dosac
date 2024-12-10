@@ -57,7 +57,8 @@ jobs:
         MINIO_ACCESS_KEY: minioadmin
         MINIO_SECRET_KEY: minioadmin
         MINIO_BUCKET_NAME: dosca
-
+        MINIO_HOST: localhost
+        MINIO_PORT: 9000
 
       run: make test
 

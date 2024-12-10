@@ -4,8 +4,7 @@ services:
     image: ankane/pgvector
     ports:
       - '5432:5432'
-    environment:
-      - POSTGRES_PASSWORD=postgres
+    env_file: .env
     restart: always
     volumes:
       - local_postgres_data:/var/lib/postgresql/data:Z
@@ -15,12 +14,30 @@ services:
     ports:
       - '9000:9000'
       - '9001:9001'
+    env_file: .env
+    restart: always
     volumes:
       - local_minio_data:/data
-    environment:
-      - MINIO_ACCESS_KEY=minioadmin
-      - MINIO_SECRET_KEY=minioadmin
     command: server --console-address ":9001" /data
+
+  web:
+    build:
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - minio
+    env_file: .env
+    ports:
+      - "8080:8080"
+
+  worker:
+    build:
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - minio
+    env_file: .env
+    command: "poetry run python manage.py qcluster"
 
 volumes:
   local_postgres_data: {}
