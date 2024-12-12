@@ -64,6 +64,8 @@ else:
         aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
     )
 
+    CORS_ALLOW_ALL_ORIGINS = True
+
     try:
         s3.create_bucket(Bucket=AWS_STORAGE_BUCKET_NAME)
     except Exception:
@@ -87,9 +89,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -209,9 +211,9 @@ LOGIN_REDIRECT_URL = "/"
 
 STORAGES = {
     "default": {
-        "BACKEND": "storages.backends.s3.S3Storage",
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
     },
     "staticfiles": {
-        "BACKEND": "storages.backends.s3.S3Storage",
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
     },
 }
