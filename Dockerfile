@@ -1,6 +1,6 @@
 
 # poetry
-FROM python:3.12-slim
+FROM python:3.13-slim
 
 RUN apt-get update && apt-get install --yes build-essential > /dev/null
 
