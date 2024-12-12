@@ -8,14 +8,23 @@
 <script type="module">
   // If absolute URL from the remote server is provided, configure the CORS
   // header on that server.
-  console.log("hello");
+
+  function decodeHtmlEntities(str) {
+      // Create a temporary DOM element
+      var tempDiv = document.createElement('div');
+      // Set the innerHTML to the string, which will decode entities
+      tempDiv.innerHTML = str;
+      // Return the decoded text
+      return tempDiv.textContent || tempDiv.innerText;
+  }
+
   const url = "{{ embedding.document.file.url }}"; // Use the file URL directly
-  console.log("url=" + url);
+  console.log("url=" + decodeHtmlEntities(url));
 
 
 
   // Asynchronously download PDF
-  const loadingTask = pdfjsLib.getDocument(url);
+  const loadingTask = pdfjsLib.getDocument(decodeHtmlEntities(url));
   loadingTask.promise.then(pdf => {
       console.log('PDF loaded');
 
