@@ -42,7 +42,7 @@ else:
     ALLOWED_HOSTS = ["localhost"]
     CSRF_TRUSTED_ORIGINS = []
     WEBSOCKET_SCHEME = "ws"
-    HTTP_SCHEME = "https"
+    HTTP_SCHEME = "http"
 
     EMAIL_HOST_USER = "no-reply@example.com"
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
@@ -67,11 +67,14 @@ else:
     except Exception:
         pass
 
+AWS_S3_SIGNATURE_VERSION = "s3v4"
+
 # Application definition
 
 INSTALLED_APPS = [
     "django_q",
     "daphne",
+    "corsheaders",
     "core.apps.CoreConfig",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -84,6 +87,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -209,3 +213,8 @@ STORAGES = {
         "BACKEND": "storages.backends.s3.S3Storage",
     },
 }
+
+
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://bucketeer-.*.s3.amazonaws.com/$",
+]
