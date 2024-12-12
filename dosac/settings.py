@@ -37,6 +37,8 @@ if APP_HOST := os.environ.get("APP_HOST"):
     AWS_SECRET_ACCESS_KEY = os.environ["BUCKETEER_AWS_SECRET_ACCESS_KEY"]
     AWS_STORAGE_BUCKET_NAME = os.environ["BUCKETEER_BUCKET_NAME"]
 
+    CORS_ALLOWED_ORIGIN_REGEXES = [f"https://{APP_HOST}"]
+
 
 else:
     ALLOWED_HOSTS = ["localhost"]
@@ -213,8 +215,3 @@ STORAGES = {
         "BACKEND": "storages.backends.s3.S3Storage",
     },
 }
-
-
-CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^https://bucketeer-.*.s3.amazonaws.com/$",
-]
