@@ -35,7 +35,7 @@
           page.getTextContent().then(function(textContent) {
             // Loop through text items to find the text you want to highlight
             textContent.items.forEach(function(item) {
-              if (item.str.includes("{{ embedding.text|stringformat:'r' }}")) {
+              if ("{{ embedding.text|stringformat:'r' }}".includes(item.str)) {
                 console.log("found!");
               } else {
                 console.log(item + " isnt relevant");
