@@ -1,8 +1,11 @@
 import os
+from logging import getLogger
 from pathlib import Path
 
 import boto3
 from dotenv import load_dotenv
+
+logger = getLogger(__name__)
 
 load_dotenv()
 
@@ -41,6 +44,22 @@ if APP_HOST := os.environ.get("APP_HOST"):
 
     s3 = boto3.client("s3")
 
+    CORS_CONFIGURATION = {
+        "CORSRules": [
+            {
+                "AllowedHeaders": ["*"],
+                "ExposeHeaders": ["ETag", "x-amz-meta-custom-header"],
+                "AllowedMethods": ["HEAD", "GET", "PUT", "POST", "DELETE"],
+                "AllowedOrigins": ["*"],
+            }
+        ]
+    }
+    put_bucket_cors_result = s3.put_bucket_cors(
+        Bucket=AWS_STORAGE_BUCKET_NAME, CORSConfiguration=CORS_CONFIGURATION
+    )
+    logger.info(put_bucket_cors_result)
+
+
 else:
     ALLOWED_HOSTS = ["localhost"]
     CSRF_TRUSTED_ORIGINS = []
@@ -72,17 +91,6 @@ else:
     except Exception:
         pass
 
-cors_configuration = {
-    "CORSRules": [
-        {
-            "AllowedHeaders": ["*"],
-            "ExposeHeaders": ["ETag", "x-amz-meta-custom-header"],
-            "AllowedMethods": ["HEAD", "GET", "PUT", "POST", "DELETE"],
-            "AllowedOrigins": ["*"],
-        }
-    ]
-}
-s3.put_bucket_cors(Bucket=AWS_STORAGE_BUCKET_NAME, CORSConfiguration=cors_configuration)
 
 AWS_S3_SIGNATURE_VERSION = "s3v4"
 
