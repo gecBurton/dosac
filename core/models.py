@@ -94,11 +94,9 @@ class Document(BaseModel):
         try:
             self._generate_elements()
             self.processing_error = None
-            self.save()
         except Exception as e:
             self.processing_error = str(e)
-            self.save()
-            raise e
+        self.save()
 
     def _generate_elements(self):
         headers = {

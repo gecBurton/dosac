@@ -1,6 +1,7 @@
 import os
 
 from langchain.chat_models import init_chat_model
+from langchain_core.embeddings import FakeEmbeddings
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableLambda
 from langchain_openai import OpenAIEmbeddings
@@ -24,6 +25,8 @@ def get_chat_llm():
 
 
 def get_embedding_model():
+    if "FAKE_API_KEY" in os.environ:
+        return FakeEmbeddings(size=3072)
     if "AZURE_OPENAI_API_KEY" in os.environ:
         return AzureOpenAIEmbeddings(model=EMBEDDING_MODEL)
     if "OPENAI_API_KEY" in os.environ:
