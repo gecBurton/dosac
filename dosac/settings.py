@@ -39,6 +39,7 @@ if APP_HOST := os.environ.get("APP_HOST"):
 
     CORS_ALLOWED_ORIGIN_REGEXES = [f"https://{APP_HOST}"]
 
+    s3 = boto3.client("s3")
 
 else:
     ALLOWED_HOSTS = ["localhost"]
@@ -70,6 +71,18 @@ else:
         s3.create_bucket(Bucket=AWS_STORAGE_BUCKET_NAME)
     except Exception:
         pass
+
+cors_configuration = {
+    "CORSRules": [
+        {
+            "AllowedHeaders": ["*"],
+            "ExposeHeaders": ["ETag", "x-amz-meta-custom-header"],
+            "AllowedMethods": ["HEAD", "GET", "PUT", "POST", "DELETE"],
+            "AllowedOrigins": ["*"],
+        }
+    ]
+}
+s3.put_bucket_cors(Bucket=AWS_STORAGE_BUCKET_NAME, CORSConfiguration=cors_configuration)
 
 AWS_S3_SIGNATURE_VERSION = "s3v4"
 
