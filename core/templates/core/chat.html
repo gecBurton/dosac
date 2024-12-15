@@ -25,6 +25,9 @@ socket.onmessage = function(e) {
     if (message.event == 'on_chat_model_stream') {
         buffer += message.data.chunk.content;
         lastMessage.innerHTML = marked.parse(buffer);
+    } else if (message.event == 'done') {
+        buffer = "";
+        lastMessage.innerHTML = marked.parse(message.data.annotated_content);
     } else {
         console.log(message);
     }
