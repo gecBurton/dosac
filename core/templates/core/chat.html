@@ -2,7 +2,10 @@
 
 {% block content %}
 <script>
+
 let buffer = '';
+marked.use(markedFootnote());;
+
 document.addEventListener('DOMContentLoaded', function () {
    var elements = document.querySelectorAll('.aiMessage');
 

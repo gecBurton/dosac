@@ -256,4 +256,4 @@ class Citation(models.Model):
         index = content.index(self.text_in_answer) + len(self.text_in_answer)
         start = content[:index]
         end = content[index:]
-        return f"{start} [{self.index}]({self.reference} {repr(self.text_in_source)}) {end}"
+        return f'{start}[^{self.index}]{end}\n\n[^{self.index}]: "{repr(self.text_in_source)[1:-1]}" [source]({self.reference})'
