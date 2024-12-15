@@ -23,7 +23,8 @@ User = get_user_model()
 def embedding_detail(request, pk: UUID):
     embedding = get_object_or_404(Embedding, pk=pk, document__user=request.user)
     context = {
-        "embedding": embedding, "page_number": embedding.metadata.get("page_number", 0)
+        "embedding": embedding,
+        "page_number": embedding.metadata.get("page_number", 0),
     }
     return render(request, "core/document.html", context)
 

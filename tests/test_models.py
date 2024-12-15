@@ -47,9 +47,10 @@ def test_chat_annotated_content(chat_message):
         index=1,
     )
 
+    content = chat_message.annotated_content()
     assert (
-        chat_message.annotated_content()
-        == "the cat [1](www.catfacts.com 'cats are nice')  sat on the mat"
+        content
+        == 'the cat[^1] sat on the mat\n\n[^1]: "cats are nice" [source](www.catfacts.com)'
     )
 
 
