@@ -9,16 +9,9 @@ class EmbeddingInline(admin.StackedInline):
     ordering = ["index"]
 
 
-@admin.action(description="Extract Text from Documents")
-def generate_elements(modeladmin, request, queryset):
-    for document in queryset.all():
-        document.generate_elements()
-
-
 class DocumentAdmin(admin.ModelAdmin):
     list_display = ["id", "file", "status"]
     exclude = ["embeddings"]
-    actions = [generate_elements]
     inlines = [EmbeddingInline]
 
 
