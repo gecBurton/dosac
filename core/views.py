@@ -48,7 +48,7 @@ def upload_file(request):
             except IntegrityError:
                 error = "file with this name already exists"
         else:
-            error = " ".join(form.errors)
+            error = " ".join(e for errors in form.errors.values() for e in errors)
     return error
 
 

@@ -39,11 +39,14 @@ def chat_message(chat):
     yield _message
     _message.delete()
 
+@pytest.fixture
+def file():
+    yield SimpleUploadedFile(name="hello.txt", content=b"hello!")
 
 @pytest.fixture
-def user_document(user):
+def user_document(user, file):
     document = Document.objects.create(
-        user=user, file=SimpleUploadedFile(name="hello.txt", content=b"hello!")
+        user=user, file=file
     )
     yield document
     document.delete()
