@@ -39,15 +39,15 @@ def chat_message(chat):
     yield _message
     _message.delete()
 
+
 @pytest.fixture
 def file():
     yield SimpleUploadedFile(name="hello.txt", content=b"hello!")
 
+
 @pytest.fixture
 def user_document(user, file):
-    document = Document.objects.create(
-        user=user, file=file
-    )
+    document = Document.objects.create(user=user, file=file)
     yield document
     document.delete()
 
@@ -80,3 +80,16 @@ def user_with_many_chat_messages(user):
 
     for chat in chats:
         chat.delete()
+
+
+@pytest.fixture
+def user_with_many_documents(user):
+    documents = [
+        Document.objects.create(
+            user=user, file=SimpleUploadedFile(name=f"hello_{i}.txt", content=b"hello!")
+        )
+        for i in range(10)
+    ]
+    yield user
+    for document in documents:
+        document.delete()

@@ -3,7 +3,13 @@ import os
 import pytest
 from langchain_core.messages import AIMessage, HumanMessage
 
-from core.models import ChatMessage, Citation, Embedding, Document
+from core.models import (
+    ChatMessage,
+    Citation,
+    Embedding,
+    Document,
+    User,
+)
 from dosac import settings
 from tests.conftest import gaussian
 
@@ -146,3 +152,10 @@ def test_model_get_history(user_with_many_chat_messages):
     chats = user_with_many_chat_messages.get_history(limit=5)
     assert len(chats) == 5
     assert all(chat.chatmessage_set.count() > 1 for chat in chats)
+
+
+@pytest.mark.django_db
+def test_create_superuser():
+    user = User.objects.create_superuser("me@example.com", "password")
+    assert user.email == "me@example.com"
+    user.delete()

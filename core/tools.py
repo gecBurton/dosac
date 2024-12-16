@@ -80,7 +80,6 @@ async def build_delete_document(user_id: UUID):
 
     @tool
     def delete_document(
-        user_id: Annotated[UUID, InjectedState("user_id")],
         exact_document_name: file_name_type,
     ) -> bool:
         """delete a document give the exact_document_name,
