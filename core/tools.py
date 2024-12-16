@@ -71,9 +71,9 @@ def list_documents(
     return "\n".join(doc.file.name for doc in docs), metadata
 
 
-async def build_delete_document(user_id: UUID):
+def build_delete_document(user_id: UUID):
     file_names = [
-        doc.file.name async for doc in DocumentModel.objects.filter(user_id=user_id)
+        doc.file.name for doc in DocumentModel.objects.filter(user_id=user_id)
     ]
 
     file_name_type = Literal[*file_names] if file_names else str
