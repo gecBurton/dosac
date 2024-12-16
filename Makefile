@@ -23,4 +23,4 @@ worker:
 
 
 test:
-	poetry run pytest --cov=core --cov-report term-missing tests
+	poetry run pytest --cov=core --cov-report term-missing --cov-fail-under=70 tests
