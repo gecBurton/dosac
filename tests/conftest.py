@@ -1,4 +1,5 @@
 import math
+import os
 
 import pytest
 from django.contrib.auth import get_user_model
@@ -15,6 +16,12 @@ def gaussian(x: float, mu: float = 0, sigma: float = 1) -> float:
     numerator = math.exp(-math.pow((x - mu) / sigma, 2) / 2)
     denominator = SQRT_2_PI * sigma
     return numerator / denominator
+
+
+@pytest.fixture
+def fake_embeddings():
+    os.environ["FAKE_API_KEY"] = "n dm"
+    yield
 
 
 @pytest.fixture

@@ -32,7 +32,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         chat_id = self.scope["url_route"]["kwargs"]["chat_id"]
         user = self.scope["user"]
 
-        delete_document = await build_delete_document(user.id)
+        delete_document = await sync_to_async(build_delete_document)(user.id)
         agent = create_react_agent(
             get_chat_llm(),
             tools=[search_wikipedia, search_documents, list_documents, delete_document],

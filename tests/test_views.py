@@ -1,4 +1,3 @@
-import os
 
 import pytest
 from django.conf import settings
@@ -48,9 +47,8 @@ def test_chat_detail(client, user, chat):
 
 
 @pytest.mark.django_db
-def test_chat_detail_add_file(client, user, chat, file, requests_mock):
+def test_chat_detail_add_file(client, user, chat, file, requests_mock, fake_embeddings):
     initial_doc_count = Document.objects.count()
-    os.environ["FAKE_API_KEY"] = "mvndsk"
     requests_mock.post(
         settings.UNSTRUCTURED_API_URL,
         json=[
