@@ -1,4 +1,7 @@
+import os
+
 import pytest
+from django.conf import settings
 from django.urls import reverse
 
 from core.models import Document, Chat
@@ -34,3 +37,30 @@ def test_chat_new(client, user):
     assert response.status_code == 302
     pk = response.url.strip("/")
     assert Chat.objects.filter(pk=pk).exists()
+
+
+@pytest.mark.django_db
+def test_chat_detail(client, user, chat):
+    client.force_login(user)
+    url = reverse("chat-detail", args=(chat.pk,))
+    response = client.get(url)
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_chat_detail_add_file(client, user, chat, file, requests_mock):
+    initial_doc_count   = Document.objects.count()
+    os.environ["FAKE_API_KEY"] = "mvndsk"
+    requests_mock.post(
+        settings.UNSTRUCTURED_API_URL,
+        json=[
+            {"text": "I am some text", "metadata": {}},
+            {"text": "I am some other text", "metadata": {}},
+        ],
+    )
+
+    client.force_login(user)
+    url = reverse("chat-detail", args=(chat.pk,))
+    response = client.post(url, {"file": file})
+    assert response.status_code == 200
+    assert Document.objects.count() == initial_doc_count + 1
