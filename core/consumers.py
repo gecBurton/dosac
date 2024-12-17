@@ -58,12 +58,12 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             stream_mode="values",
             version="v2",
         ):
+            await self.send_json(content=to_json(event))
             if event["event"] == "on_chain_end" and event["name"] == "LangGraph":
                 last_message = event["data"]["output"]["messages"][-1]
                 answer = await sync_to_async(ChatMessageModel.from_langchain)(
                     chat=chat, message=last_message
                 )
-                await self.send_json(content=to_json(event))
 
             elif event["event"] == "on_chain_end" and event["name"] == "citations":
                 for index, citation in enumerate(
@@ -76,7 +76,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                         reference=citation.reference,
                         index=index,
                     )
-                await self.send_json(content=to_json(event))
 
         annotated_content = await sync_to_async(answer.annotated_content)()
         await self.send_json(
