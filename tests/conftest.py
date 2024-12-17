@@ -2,8 +2,10 @@ import math
 import os
 
 import pytest
+import pytest_asyncio
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
+from langchain_core.language_models import GenericFakeChatModel
 
 from core.models import Chat, ChatMessage, Document, Embedding
 
@@ -31,11 +33,25 @@ def user():
     _user.delete()
 
 
+@pytest_asyncio.fixture
+async def async_user():
+    _user = await User.objects.acreate(email="whatever@somewhere.com")
+    yield _user
+    await _user.adelete()
+
+
 @pytest.fixture
 def chat(user):
     _chat = Chat.objects.create(user=user)
     yield _chat
     _chat.delete()
+
+
+@pytest_asyncio.fixture
+async def async_chat(async_user):
+    _chat = await Chat.objects.acreate(user=async_user)
+    yield _chat
+    await _chat.adelete()
 
 
 @pytest.fixture
@@ -100,3 +116,8 @@ def user_with_many_documents(user):
     yield user
     for document in documents:
         document.delete()
+
+
+class FakeChatModel(GenericFakeChatModel):
+    def bind_tools(self, tools, **kwargs):
+        return self
