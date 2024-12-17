@@ -5,6 +5,7 @@ import pytest
 import pytest_asyncio
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
+from langchain_core.language_models import GenericFakeChatModel
 
 from core.models import Chat, ChatMessage, Document, Embedding
 
@@ -115,3 +116,8 @@ def user_with_many_documents(user):
     yield user
     for document in documents:
         document.delete()
+
+
+class FakeChatModel(GenericFakeChatModel):
+    def bind_tools(self, tools, **kwargs):
+        return self
