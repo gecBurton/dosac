@@ -21,7 +21,13 @@ async def test_receive_json(async_chat):
     with patch(
         "core.consumers.get_chat_llm",
         return_value=FakeChatModel(
-            messages=iter([AIMessage(content="hello"), AIMessage(content="hello")])
+            messages=iter(
+                [
+                    AIMessage(content="hello"),
+                    AIMessage(content="hello"),
+                    AIMessage(content="hello"),
+                ]
+            )
         ),
     ):
         await communicator.send_json_to({"content": "hello"})
