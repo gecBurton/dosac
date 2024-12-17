@@ -164,7 +164,11 @@ class Embedding(BaseModel):
 
     @classmethod
     def search_by_vector(
-        cls, user_id: uuid.UUID, embedded_query: list[float], window_size: int=2, top_k_results: int = 3
+        cls,
+        user_id: uuid.UUID,
+        embedded_query: list[float],
+        window_size: int = 2,
+        top_k_results: int = 3,
     ) -> list:
         window = Window(
             expression=Sum("embedding"),
