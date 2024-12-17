@@ -10,7 +10,8 @@ from tests.conftest import FakeChatModel
 
 @pytest.mark.asyncio
 @pytest.mark.django_db
-async def test_receive_json(async_chat):
+@patch("core.consumers.get_chat_llm")
+async def test_receive_json(fake_chat_model, async_chat):
     communicator = WebsocketCommunicator(ChatConsumer.as_asgi(), f"{async_chat.id}/")
     communicator.scope["user"] = async_chat.user
     communicator.scope["url_route"] = {"kwargs": {"chat_id": async_chat.id}}
@@ -18,29 +19,26 @@ async def test_receive_json(async_chat):
 
     assert connected
 
-    with patch(
-        "core.consumers.get_chat_llm",
-        return_value=FakeChatModel(
-            messages=iter(
-                [
-                    AIMessage(content="hello"),
-                    AIMessage(content="hello"),
-                    AIMessage(content="hello"),
-                ]
-            )
-        ),
-    ):
-        await communicator.send_json_to({"content": "hello"})
-        response_1 = await communicator.receive_json_from()
-        assert response_1["event"] == "on_chain_end"
-        assert len(response_1["data"]["output"]["messages"]) == 3
+    fake_chat_model.return_value = FakeChatModel(
+        messages=iter(
+            [
+                AIMessage(content="hello"),
+                AIMessage(content="hello"),
+            ]
+        )
+    )
 
-        response_2 = await communicator.receive_json_from()
-        assert response_2["event"] == "on_chain_end"
-        assert response_2["data"]["output"] == {"citations": []}
+    await communicator.send_json_to({"content": "hello"})
+    response_1 = await communicator.receive_json_from()
+    assert response_1["event"] == "on_chain_end"
+    assert len(response_1["data"]["output"]["messages"]) == 3
 
-        response_3 = await communicator.receive_json_from()
-        assert response_2["event"] == "on_chain_end"
-        assert response_3["data"]["annotated_content"]
+    response_2 = await communicator.receive_json_from()
+    assert response_2["event"] == "on_chain_end"
+    assert response_2["data"]["output"] == {"citations": []}
+
+    response_3 = await communicator.receive_json_from()
+    assert response_2["event"] == "on_chain_end"
+    assert response_3["data"]["annotated_content"]
 
     await communicator.disconnect()
