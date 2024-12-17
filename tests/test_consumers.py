@@ -1,7 +1,11 @@
+from unittest.mock import patch
+
 import pytest
 from channels.testing import WebsocketCommunicator
+from langchain_core.messages import AIMessage
 
 from core.consumers import ChatConsumer
+from tests.conftest import FakeChatModel
 
 
 @pytest.mark.asyncio
@@ -14,17 +18,23 @@ async def test_receive_json(async_chat):
 
     assert connected
 
-    await communicator.send_json_to({"content": "hello"})
-    response_1 = await communicator.receive_json_from()
-    assert response_1["event"] == "on_chain_end"
-    assert len(response_1["data"]["output"]["messages"]) == 3
+    with patch(
+        "core.consumers.get_chat_llm",
+        return_value=FakeChatModel(
+            messages=iter([AIMessage(content="hello"), AIMessage(content="hello")])
+        ),
+    ):
+        await communicator.send_json_to({"content": "hello"})
+        response_1 = await communicator.receive_json_from()
+        assert response_1["event"] == "on_chain_end"
+        assert len(response_1["data"]["output"]["messages"]) == 3
 
-    response_2 = await communicator.receive_json_from()
-    assert response_2["event"] == "on_chain_end"
-    assert response_2["data"]["output"] == {"citations": []}
+        response_2 = await communicator.receive_json_from()
+        assert response_2["event"] == "on_chain_end"
+        assert response_2["data"]["output"] == {"citations": []}
 
-    response_3 = await communicator.receive_json_from()
-    assert response_2["event"] == "on_chain_end"
-    assert response_3["data"]["annotated_content"]
+        response_3 = await communicator.receive_json_from()
+        assert response_2["event"] == "on_chain_end"
+        assert response_3["data"]["annotated_content"]
 
     await communicator.disconnect()
