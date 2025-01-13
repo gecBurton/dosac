@@ -95,10 +95,10 @@ class Document(BaseModel):
     def _generate_elements(self):
         text = md.convert(self.file.url)
 
-        embeddings: list[list[float]] = get_embedding_model().embed_documents([text])
+        embeddings: list[list[float]] = get_embedding_model().embed_documents([text.text_content])
 
         for i, (text, embedding, metadata) in enumerate(
-            zip([text], embeddings, [{"filename": self.file.name}])
+            zip([text.text_content], embeddings, [{"filename": self.file.name}])
         ):
             Embedding.objects.create(
                 document=self,
