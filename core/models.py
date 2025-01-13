@@ -3,7 +3,6 @@ import uuid
 from logging import getLogger
 from typing import Self, Literal
 
-from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.db import models
 from django.db.models import Count
@@ -12,7 +11,8 @@ from langchain_core.messages import AnyMessage, AIMessage, HumanMessage
 from pgvector.django import VectorField, CosineDistance
 from langchain_core.documents import Document as LangchainDocument
 
-import requests
+from markitdown import MarkItDown
+
 
 from django.contrib.auth.models import AbstractUser, UserManager
 
@@ -20,6 +20,8 @@ from core.ai_core import get_embedding_model
 
 
 logger = getLogger(__name__)
+
+md = MarkItDown()
 
 
 class CoreUserManager(UserManager):
@@ -91,38 +93,12 @@ class Document(BaseModel):
         self.save()
 
     def _generate_elements(self):
-        headers = {
-            "accept": "application/json",
-            "unstructured-api-key": settings.UNSTRUCTURED_API_KEY,
-        }
+        text = md.convert(self.file.url)
 
-        files = {
-            "pdf_infer_table_structure": (None, "true"),
-            "max_characters": (None, "1500"),
-            "combine_under_n_chars": (None, "500"),
-            "strategy": (None, "fast"),
-            "files": (
-                self.file.name,
-                self.file.open("rb"),
-            ),
-            "chunking_strategy": (None, "by_title"),
-        }
-
-        response = requests.post(
-            settings.UNSTRUCTURED_API_URL, headers=headers, files=files
-        )
-        response.raise_for_status()
-
-        texts = [element_response["text"] for element_response in response.json()]
-
-        metadatas = [
-            element_response["metadata"] for element_response in response.json()
-        ]
-
-        embeddings: list[list[float]] = get_embedding_model().embed_documents(texts)
+        embeddings: list[list[float]] = get_embedding_model().embed_documents([text])
 
         for i, (text, embedding, metadata) in enumerate(
-            zip(texts, embeddings, metadatas)
+            zip([text], embeddings, [{"filename": self.file.name}])
         ):
             Embedding.objects.create(
                 document=self,

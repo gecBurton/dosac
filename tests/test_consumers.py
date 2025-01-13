@@ -5,7 +5,7 @@ from channels.testing import WebsocketCommunicator
 from langchain_core.messages import AIMessage
 
 from core.consumers import ChatConsumer
-from tests.conftest import FakeChatModel
+from .conftest import FakeChatModel
 
 
 @pytest.mark.xfail(reason="not working on github")

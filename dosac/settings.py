@@ -159,9 +159,6 @@ DATABASES = {
     }
 }
 
-UNSTRUCTURED_API_URL = os.environ["UNSTRUCTURED_API_URL"]
-UNSTRUCTURED_API_KEY = os.environ["UNSTRUCTURED_API_KEY"]
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
