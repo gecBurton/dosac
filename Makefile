@@ -24,3 +24,6 @@ worker:
 
 test:
 	poetry run pytest --cov=core --cov-report term-missing --cov-fail-under=85 tests
+
+databases:
+	docker-compose up -d postgres minio

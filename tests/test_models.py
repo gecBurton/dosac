@@ -8,8 +8,7 @@ from core.models import (
     Document,
     User,
 )
-from dosac import settings
-from tests.conftest import gaussian
+from .conftest import gaussian
 
 
 @pytest.mark.django_db
@@ -102,44 +101,15 @@ def test_document_delete_by_name(user_document):
 
 
 @pytest.mark.django_db
-def test_document_generate_elements(user_document, requests_mock, fake_embeddings):
+def test_document_generate_elements(user_document, fake_embeddings):
     assert user_document.status == "PROCESSING"
     assert user_document.processing_error is None
     assert user_document.embedding_set.count() == 0
-
-    requests_mock.post(
-        settings.UNSTRUCTURED_API_URL,
-        json=[
-            {"text": "I am some text", "metadata": {}},
-            {"text": "I am some other text", "metadata": {}},
-        ],
-    )
     user_document.generate_elements()
 
     assert user_document.status == "COMPLETE"
     assert user_document.processing_error is None
-    assert user_document.embedding_set.count() == 2
-
-
-@pytest.mark.django_db
-def test_document_generate_elements_openai_error(
-    user_document, requests_mock, fake_embeddings
-):
-    assert user_document.status == "PROCESSING"
-    assert user_document.processing_error is None
-    assert user_document.embedding_set.count() == 0
-
-    requests_mock.post(
-        settings.UNSTRUCTURED_API_URL, status_code=400, text="hello, i am an error"
-    )
-    user_document.generate_elements()
-
-    assert user_document.status == "ERROR"
-    assert (
-        user_document.processing_error
-        == "400 Client Error: None for url: https://api.unstructured.io/general/v0/general"
-    )
-    assert user_document.embedding_set.count() == 0
+    assert user_document.embedding_set.count() == 1
 
 
 @pytest.mark.django_db

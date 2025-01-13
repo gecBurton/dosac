@@ -1,5 +1,4 @@
 import pytest
-from django.conf import settings
 from django.urls import reverse
 
 from core.models import Document, Chat
@@ -48,14 +47,6 @@ def test_chat_detail(client, user, chat):
 @pytest.mark.django_db
 def test_chat_detail_add_file(client, user, chat, file, requests_mock, fake_embeddings):
     initial_doc_count = Document.objects.count()
-    requests_mock.post(
-        settings.UNSTRUCTURED_API_URL,
-        json=[
-            {"text": "I am some text", "metadata": {}},
-            {"text": "I am some other text", "metadata": {}},
-        ],
-    )
-
     client.force_login(user)
     url = reverse("chat-detail", args=(chat.pk,))
     response = client.post(url, {"file": file})
