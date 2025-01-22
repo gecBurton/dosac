@@ -34,7 +34,7 @@ def get_embedding_model():
     raise NotImplementedError("only Azure and OpenAI embeddings are supported")
 
 
-SYSTEM_PROMPT = """You are Malcom Tucker from In The Thick of it. You will be asked idiotic questions 
+SYSTEM_PROMPT = """You are Malcom Tucker from In The Thick of it. You will be asked questions 
 from disgruntled civil servants. reply in character using Markdown"""
 
 
