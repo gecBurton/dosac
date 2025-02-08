@@ -20,7 +20,11 @@ variable "project_id" {
 
 variable "region" {
   type = string
-  default = "region"
+  default = "fr-par"
+}
+
+variable "project_name" {
+  type = string
 }
 
 variable "postgres_name" {
@@ -48,3 +52,6 @@ variable "postgres_port" {
   default = "5432"
 }
 
+variable "image" {
+  type = string
+}

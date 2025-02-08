@@ -1,8 +1,8 @@
 
 # poetry
-FROM python:3.13-slim
-
-RUN apt-get update && apt-get install --yes build-essential > /dev/null
+FROM python:3.12-slim
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install --yes build-essential
 
 RUN pip install poetry poetry-plugin-bundle
 

@@ -1,4 +1,5 @@
-*.tfvars
+/infrastrcuture/scw/kubeconfig.yaml
+/infrastrcuture/scw/terraform.tfvars
 
 static/
 uploads/

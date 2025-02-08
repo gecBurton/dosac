@@ -13,27 +13,50 @@ resource "scaleway_rdb_instance" main {
 
 resource "scaleway_rdb_database" "main" {
   instance_id    = scaleway_rdb_instance.main.id
-  name           = "main-database"
+  name           = "${var.project_name}-database"
+  region         = var.region
 }
 
-# resource "scaleway_instance_server" "myapp" {
-#    name   = "django-app-server"
-#    type   = "DEV1-S"  # Choose an appropriate size
-#    image  = "ubuntu-focal"  # Or any other preferred distribution
-#  }
-#
-# resource "scaleway_instance_security_group" "allow_http_postgres" {
-#    inbound_rule {
-#      action      = "accept"
-#      ip_range    = "0.0.0.0/0"
-#      protocol    = "tcp"
-#      port        = 80    # HTTP
-#    }
-#    inbound_rule {
-#      action      = "accept"
-#      ip_range    = "0.0.0.0/0"
-#      protocol    = "tcp"
-#      port        = 5432  # PostgreSQL
-#    }
-#  }
-#
+resource "scaleway_object_bucket" "bucket" {
+  name = "${var.project_name}-bucket"
+  region = var.region
+}
+
+output "bucket_url" {
+  value = "https://${scaleway_object_bucket.bucket.name}.${scaleway_object_bucket.bucket.endpoint}"
+}
+
+resource "scaleway_vpc_private_network" "vpc" {
+  name = "${var.project_name}-vpc"
+  region = var.region
+}
+
+resource "scaleway_k8s_cluster" "k8s-cluster" {
+  name        = "${var.project_name}-k8s-cluster"
+  version     = "1.31.2"
+  cni         = "cilium"
+  region      = var.region
+  delete_additional_resources = false
+  private_network_id = scaleway_vpc_private_network.vpc.id
+}
+
+resource "scaleway_k8s_pool" "pool" {
+  cluster_id  = scaleway_k8s_cluster.k8s-cluster.id
+  name        = "${var.project_name}-k8-pool"
+  node_type   = "DEV1-M"
+  size        = 2
+  autoscaling = false
+  autohealing = true
+
+  region = var.region
+  tags = ["example", "k8s"]
+}
+
+output "kubeconfig" {
+  value     = scaleway_k8s_cluster.k8s-cluster.kubeconfig[0]
+  sensitive = true
+  description = "Kubeconfig to access your Kubernetes cluster."
+}
+
+
+
