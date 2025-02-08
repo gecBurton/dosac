@@ -27,3 +27,9 @@ test:
 
 databases:
 	docker-compose up -d postgres minio
+
+
+build:
+	docker login rg.nl-ams.scw.cloud/docker-registry -u nologin --password-stdin <<< "$SCW_SECRET_KEY"
+	docker tag local-image:tagname rg.nl-ams.scw.cloud/docker-registry/imagename:latest
+	docker push rg.nl-ams.scw.cloud/docker-registry/imagename:latest
