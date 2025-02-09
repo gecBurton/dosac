@@ -5,7 +5,6 @@
 /infrastrcuture/scw/.terraform/*
 /infrastrcuture/scw/.terraform.lock.hcl
 
-
 static/
 uploads/
 
