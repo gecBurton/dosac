@@ -3,7 +3,7 @@ resource "scaleway_rdb_instance" main {
    region         = var.region
    name           = "${var.project_name}-instance"
    node_type      = "DB-DEV-S"
-   engine         = "PostgreSQL-15"
+   engine         = "PostgreSQL-14"
    is_ha_cluster  = false
    disable_backup = true
    user_name      = var.postgres_user

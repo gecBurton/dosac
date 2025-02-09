@@ -26,16 +26,10 @@ spec:
               value: "text-embedding-3-large"
             - name: OPENAI_API_VERSION
               value: "2024-02-01"
-            - name: POSTGRES_NAME
-              value: "postgres"
-            - name: MINIO_ACCESS_KEY
-              value: "minioadmin"
-            - name: MINIO_SECRET_KEY
-              value: "minioadmin"
             - name: MINIO_BUCKET_NAME
-              value: "dosac"
+              value: "dosac-bucket"
             - name: MINIO_HOST
-              value: "https://dosac-bucket.s3.fr-par.scw.cloud"
+              value: "s3.fr-par.scw.cloud"
             - name: MINIO_PORT
               value: "9000"
           envFrom:
