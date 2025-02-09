@@ -5,30 +5,31 @@ on:
     branches:
       - main
 
-  jobs:
-    build:
-      runs-on: ubuntu-latest
+jobs:
+  build:
 
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v2
+    runs-on: ubuntu-latest
 
-        - name: Set up QEMU
-          uses: docker/setup-qemu-action@v2
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-        - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
 
-        - name: Log in to Scaleway Container Registry
-          uses: docker/login-action@v2
-          with:
-            registry: rg.fr-par.scw.cloud  # Scaleway Registry URL for Paris region
-            username: ${{ secrets.SCW_USERNAME }}
-            password: ${{ secrets.SCW_PASSWORD }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-        - name: Build and push Docker image
-          uses: docker/build-push-action@v2
-          with:
-            push: true
-            tags: rg.fr-par.scw.cloud/<your-namespace>/<your-image-name>:<tag>
-            platforms: linux/amd64  # Typically used; adjust as needed
+      - name: Log in to Scaleway Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: rg.fr-par.scw.cloud  # Scaleway Registry URL for Paris region
+          username: ${{ secrets.SCW_USERNAME }}
+          password: ${{ secrets.SCW_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: rg.fr-par.scw.cloud/<your-namespace>/<your-image-name>:<tag>
+          platforms: linux/amd64  # Typically used; adjust as needed
