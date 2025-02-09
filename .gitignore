@@ -1,5 +1,9 @@
 /infrastrcuture/scw/kubeconfig.yaml
 /infrastrcuture/scw/terraform.tfvars
+/infrastrcuture/scw/terraform.tfstate
+/infrastrcuture/scw/terraform.tfstate.backup
+/infrastrcuture/scw/.terraform/*
+/infrastrcuture/scw/.terraform.lock.hcl
 
 static/
 uploads/

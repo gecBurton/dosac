@@ -17,5 +17,30 @@ spec:
           image: rg.fr-par.scw.cloud/account-registry/dosac-web:latest
           ports:
             - containerPort: 8080
+          env:
+            - name: LLM_MODEL
+              value: "gpt-4o"
+            - name: LLM_MODEL_PROVIDER
+              value: "openai"
+            - name: EMBEDDING_MODEL
+              value: "text-embedding-3-large"
+            - name: OPENAI_API_VERSION
+              value: "2024-02-01"
+            - name: POSTGRES_NAME
+              value: "postgres"
+            - name: MINIO_ACCESS_KEY
+              value: "minioadmin"
+            - name: MINIO_SECRET_KEY
+              value: "minioadmin"
+            - name: MINIO_BUCKET_NAME
+              value: "dosac"
+            - name: MINIO_HOST
+              value: "https://dosac-bucket.s3.fr-par.scw.cloud"
+            - name: MINIO_PORT
+              value: "9000"
+          envFrom:
+            - secretRef:
+                name: secret
       imagePullSecrets:
         - name: scw-registry-secret
+
