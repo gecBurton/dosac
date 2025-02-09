@@ -5,7 +5,7 @@ from typing import Self, Literal
 
 from django.contrib.auth.hashers import make_password
 from django.db import models
-from django.db.models import Count
+from django.db.models import Count, Window, RowRange, Sum
 from django.urls import reverse
 from langchain_core.messages import AnyMessage, AIMessage, HumanMessage
 from pgvector.django import VectorField, CosineDistance
@@ -140,11 +140,22 @@ class Embedding(BaseModel):
 
     @classmethod
     def search_by_vector(
-        cls, user_id: uuid.UUID, embedded_query: list[float], top_k_results: int = 3
+        cls,
+        user_id: uuid.UUID,
+        embedded_query: list[float],
+        window_size: int = 2,
+        top_k_results: int = 3,
     ) -> list:
+        window = Window(
+            expression=Sum("embedding"),
+            frame=RowRange(start=-window_size, end=window_size),
+            partition_by=["document", "index"],
+            order_by=["document", "index"],
+        )
         results = (
             cls.objects.filter(document__user_id=user_id)
-            .annotate(distance=CosineDistance("embedding", embedded_query))
+            .annotate(rolling_embedding=window)
+            .annotate(distance=CosineDistance("rolling_embedding", embedded_query))
             .order_by("distance")[:top_k_results]
         )
         return [result.to_langchain() for result in results]
