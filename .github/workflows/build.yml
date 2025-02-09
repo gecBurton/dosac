@@ -23,7 +23,7 @@ jobs:
       - name: Log in to Scaleway Container Registry
         uses: docker/login-action@v2
         with:
-          registry: rg.fr-par.scw.cloud  # Scaleway Registry URL for Paris region
+          registry: rg.fr-par.scw.cloud/account-registry
           username: ${{ secrets.SCW_USERNAME }}
           password: ${{ secrets.SCW_PASSWORD }}
 
@@ -31,5 +31,5 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: rg.fr-par.scw.cloud/<your-namespace>/<your-image-name>:<tag>
+          tags: rg.fr-par.scw.cloud/account-registry/dosac-web:latest
           platforms: linux/amd64  # Typically used; adjust as needed
