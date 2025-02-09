@@ -9,7 +9,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . -t ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/dosac-web:latest
+      run: |
+        echo ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/dosac-web:latest
+        docker build . -t ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/dosac-web:latest
     - name: Login to Scaleway Container Registry
       uses: docker/login-action@v3
       with:
