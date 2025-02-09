@@ -1,14 +1,13 @@
 
 resource "scaleway_rdb_instance" main {
    region         = var.region
-   name           = var.postgres_name
+   name           = "${var.project_name}-instance"
    node_type      = "DB-DEV-S"
    engine         = "PostgreSQL-15"
    is_ha_cluster  = false
    disable_backup = true
    user_name      = var.postgres_user
    password       = var.postgres_password
-
 }
 
 resource "scaleway_rdb_database" "main" {
@@ -16,6 +15,43 @@ resource "scaleway_rdb_database" "main" {
   name           = "${var.project_name}-database"
   region         = var.region
 }
+
+resource "scaleway_rdb_user" "main" {
+  instance_id = scaleway_rdb_instance.main.id
+  name        = "django"
+  password    = var.postgres_password
+  is_admin    = true
+}
+
+resource "scaleway_rdb_privilege" "main" {
+  instance_id   = scaleway_rdb_instance.main.id
+  user_name     = scaleway_rdb_user.main.name
+  database_name = scaleway_rdb_database.main.name
+  permission    = "all"
+}
+
+
+output "pg_host" {
+  value = scaleway_rdb_instance.main.endpoint_ip
+}
+
+output "pg_port" {
+  value = scaleway_rdb_instance.main.endpoint_port
+}
+
+output "pg_password" {
+  value = scaleway_rdb_instance.main.password
+  sensitive = true
+}
+
+output "pg_user" {
+  value = scaleway_rdb_instance.main.user_name
+}
+
+output "pg_database" {
+  value = scaleway_rdb_instance.main.name
+}
+
 
 resource "scaleway_object_bucket" "bucket" {
   name = "${var.project_name}-bucket"
@@ -57,6 +93,5 @@ output "kubeconfig" {
   sensitive = true
   description = "Kubeconfig to access your Kubernetes cluster."
 }
-
 
 
