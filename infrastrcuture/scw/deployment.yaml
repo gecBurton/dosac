@@ -26,12 +26,10 @@ spec:
               value: "text-embedding-3-large"
             - name: OPENAI_API_VERSION
               value: "2024-02-01"
-            - name: MINIO_BUCKET_NAME
+            - name: AWS_STORAGE_BUCKET_NAME
               value: "dosac-bucket"
-            - name: MINIO_HOST
-              value: "s3.fr-par.scw.cloud"
-            - name: MINIO_PORT
-              value: "9000"
+            - name: AWS_S3_ENDPOINT_URL
+              value: "https://dosac-bucket.s3.fr-par.scw.cloud"
           envFrom:
             - secretRef:
                 name: secret
