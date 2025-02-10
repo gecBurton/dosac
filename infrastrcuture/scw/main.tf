@@ -54,7 +54,7 @@ output "pg_database" {
 
 
 resource "scaleway_object_bucket" "bucket" {
-  name = "${var.project_name}-bucket"
+  name = "${var.project_name}-bucket2"
   region = var.region
 }
 

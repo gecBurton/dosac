@@ -1,5 +1,5 @@
 resource "scaleway_registry_namespace" "docker-registry" {
-  name   = "account-registry"
+  name   = "doscac-registry"
   region = var.region
 }
 

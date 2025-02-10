@@ -19,7 +19,7 @@ spec:
             - containerPort: 8080
           env:
             - name: LLM_MODEL
-              value: "gpt-4o"
+              value: "gpt-4o-mini"
             - name: LLM_MODEL_PROVIDER
               value: "openai"
             - name: EMBEDDING_MODEL
@@ -27,11 +27,11 @@ spec:
             - name: OPENAI_API_VERSION
               value: "2024-02-01"
             - name: AWS_STORAGE_BUCKET_NAME
-              value: "dosac-bucket"
+              value: "dosac-bucket2"
             - name: AWS_S3_ENDPOINT_URL
-              value: "https://dosac-bucket.s3.fr-par.scw.cloud"
+              value: "https://dosac-bucket2.s3.fr-par.scw.cloud"
             - name: APP_HOST
-              value: "a2026124-374a-48b1-a3a4-4f13c10cd3e8.nodes.k8s.fr-par.scw.cloud"
+              value: "51.159.11.144"
             - name: DEBUG
               value: "True"
           envFrom:
@@ -39,4 +39,3 @@ spec:
                 name: secret
       imagePullSecrets:
         - name: scw-registry-secret
-
