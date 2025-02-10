@@ -94,4 +94,3 @@ output "kubeconfig" {
   description = "Kubeconfig to access your Kubernetes cluster."
 }
 
-

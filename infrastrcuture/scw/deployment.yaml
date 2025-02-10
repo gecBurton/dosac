@@ -30,6 +30,10 @@ spec:
               value: "dosac-bucket"
             - name: AWS_S3_ENDPOINT_URL
               value: "https://dosac-bucket.s3.fr-par.scw.cloud"
+            - name: APP_HOST
+              value: "a2026124-374a-48b1-a3a4-4f13c10cd3e8.nodes.k8s.fr-par.scw.cloud"
+            - name: DEBUG
+              value: "True"
           envFrom:
             - secretRef:
                 name: secret
