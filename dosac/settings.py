@@ -29,16 +29,16 @@ if APP_HOST := os.environ.get("APP_HOST"):
     WEBSOCKET_SCHEME = "wss"
     HTTP_SCHEME = "https"
 
-    EMAIL_HOST = os.environ["MAILGUN_SMTP_SERVER"]
-    EMAIL_PORT = os.environ["MAILGUN_SMTP_PORT"]
-    EMAIL_HOST_USER = os.environ["MAILGUN_SMTP_LOGIN"]
-    EMAIL_HOST_PASSWORD = os.environ["MAILGUN_SMTP_PASSWORD"]
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    # EMAIL_HOST = os.environ["MAILGUN_SMTP_SERVER"]
+    # EMAIL_PORT = os.environ["MAILGUN_SMTP_PORT"]
+    # EMAIL_HOST_USER = os.environ["MAILGUN_SMTP_LOGIN"]
+    # EMAIL_HOST_PASSWORD = os.environ["MAILGUN_SMTP_PASSWORD"]
+    # EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
-    AWS_ACCESS_KEY_ID = os.environ["BUCKETEER_AWS_ACCESS_KEY_ID"]
-    AWS_S3_REGION_NAME = os.environ["BUCKETEER_AWS_REGION"]
-    AWS_SECRET_ACCESS_KEY = os.environ["BUCKETEER_AWS_SECRET_ACCESS_KEY"]
-    AWS_STORAGE_BUCKET_NAME = os.environ["BUCKETEER_BUCKET_NAME"]
+    AWS_STORAGE_BUCKET_NAME = os.environ["AWS_STORAGE_BUCKET_NAME"]
+    AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
+    AWS_SECRET_ACCESS_KEY = os.environ["AWS_SECRET_ACCESS_KEY"]
+    AWS_S3_ENDPOINT_URL = os.environ["AWS_S3_ENDPOINT_URL"]
 
     CORS_ALLOWED_ORIGIN_REGEXES = [f"https://{APP_HOST}"]
 
@@ -74,18 +74,12 @@ else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
     AWS_S3_REGION_NAME = "eu-west-2"
-    if "MINIO_ACCESS_KEY" in os.environ:
-        AWS_ACCESS_KEY_ID = os.environ["MINIO_ACCESS_KEY"]
-        AWS_SECRET_ACCESS_KEY = os.environ["MINIO_SECRET_KEY"]
-        AWS_STORAGE_BUCKET_NAME = os.environ["MINIO_BUCKET_NAME"]
-        minio_host = os.environ["MINIO_HOST"]
-        minio_port = os.environ["MINIO_PORT"]
-        AWS_S3_ENDPOINT_URL = f"http://{minio_host}:{minio_port}"
-    else:
-        AWS_STORAGE_BUCKET_NAME = os.environ["AWS_STORAGE_BUCKET_NAME"]
-        AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
-        AWS_SECRET_ACCESS_KEY = os.environ["AWS_SECRET_ACCESS_KEY"]
-        AWS_S3_ENDPOINT_URL = os.environ["AWS_S3_ENDPOINT_URL"]
+    AWS_ACCESS_KEY_ID = os.environ["MINIO_ACCESS_KEY"]
+    AWS_SECRET_ACCESS_KEY = os.environ["MINIO_SECRET_KEY"]
+    AWS_STORAGE_BUCKET_NAME = os.environ["MINIO_BUCKET_NAME"]
+    minio_host = os.environ["MINIO_HOST"]
+    minio_port = os.environ["MINIO_PORT"]
+    AWS_S3_ENDPOINT_URL = f"http://{minio_host}:{minio_port}"
 
     s3 = boto3.client(
         "s3",
