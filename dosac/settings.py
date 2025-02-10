@@ -58,10 +58,13 @@ if APP_HOST := os.environ.get("APP_HOST"):
             }
         ]
     }
-    put_bucket_cors_result = s3.put_bucket_cors(
-        Bucket=AWS_STORAGE_BUCKET_NAME, CORSConfiguration=CORS_CONFIGURATION
-    )
-    logger.info(put_bucket_cors_result)
+    try:
+        put_bucket_cors_result = s3.put_bucket_cors(
+            Bucket=AWS_STORAGE_BUCKET_NAME, CORSConfiguration=CORS_CONFIGURATION
+        )
+        logger.info(put_bucket_cors_result)
+    except Exception as e:
+        logger.info("failed to update CORS, error=%s", e)
 
 
 else:
