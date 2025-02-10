@@ -26,14 +26,8 @@ DEBUG = True
 if APP_HOST := os.environ.get("APP_HOST"):
     ALLOWED_HOSTS = ["localhost", APP_HOST]
     CSRF_TRUSTED_ORIGINS = [f"https://{APP_HOST}"]
-    WEBSOCKET_SCHEME = "wss"
+    WEBSOCKET_SCHEME = "ws"  # should be wss
     HTTP_SCHEME = "https"
-
-    # EMAIL_HOST = os.environ["MAILGUN_SMTP_SERVER"]
-    # EMAIL_PORT = os.environ["MAILGUN_SMTP_PORT"]
-    # EMAIL_HOST_USER = os.environ["MAILGUN_SMTP_LOGIN"]
-    # EMAIL_HOST_PASSWORD = os.environ["MAILGUN_SMTP_PASSWORD"]
-    # EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
     AWS_STORAGE_BUCKET_NAME = os.environ["AWS_STORAGE_BUCKET_NAME"]
     AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
