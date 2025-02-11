@@ -16,20 +16,6 @@ resource "scaleway_rdb_database" "main" {
   region         = var.region
 }
 
-resource "scaleway_rdb_user" "main" {
-  instance_id = scaleway_rdb_instance.main.id
-  name        = "django"
-  password    = var.postgres_password
-  is_admin    = true
-}
-
-resource "scaleway_rdb_privilege" "main" {
-  instance_id   = scaleway_rdb_instance.main.id
-  user_name     = scaleway_rdb_user.main.name
-  database_name = scaleway_rdb_database.main.name
-  permission    = "all"
-}
-
 
 output "pg_host" {
   value = scaleway_rdb_instance.main.endpoint_ip

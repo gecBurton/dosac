@@ -39,7 +39,7 @@ variable "postgres_password" {
 
 variable "postgres_user" {
   type = string
-  default = "postgres"
+  default = "django"
 }
 
 variable "postgres_host" {
@@ -52,6 +52,3 @@ variable "postgres_port" {
   default = "5432"
 }
 
-variable "image" {
-  type = string
-}
