@@ -6,7 +6,7 @@ resource "scaleway_rdb_instance" main {
    engine         = "PostgreSQL-14"
    is_ha_cluster  = false
    disable_backup = true
-   user_name      = var.postgres_user
+   user_name      = "root"
    password       = var.postgres_password
 }
 
@@ -18,7 +18,7 @@ resource "scaleway_rdb_database" "main" {
 
 resource "scaleway_rdb_user" "main" {
   instance_id = scaleway_rdb_instance.main.id
-  name        = "django"
+  name        = var.postgres_user
   password    = var.postgres_password
   is_admin    = true
 }
@@ -54,7 +54,7 @@ output "pg_database" {
 
 
 resource "scaleway_object_bucket" "bucket" {
-  name = "${var.project_name}-bucket2"
+  name = "${var.project_name}-static"
   region = var.region
 }
 
@@ -89,7 +89,7 @@ resource "scaleway_k8s_pool" "pool" {
 }
 
 output "kubeconfig" {
-  value     = scaleway_k8s_cluster.k8s-cluster.kubeconfig[0]
+  value     = scaleway_k8s_cluster.k8s-cluster.kubeconfig[0].config_file
   sensitive = true
   description = "Kubeconfig to access your Kubernetes cluster."
 }
