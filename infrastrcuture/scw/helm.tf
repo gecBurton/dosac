@@ -1,10 +1,26 @@
-provider "kubernetes" {
-  config_path = "/Users/george.burton/dosac/infrastrcuture/scw/kubeconfig.yaml"
+resource "null_resource" "kubeconfig" {
+  depends_on = [scaleway_k8s_pool.pool]
+  triggers = {
+    host                   = scaleway_k8s_cluster.k8s-cluster.kubeconfig[0].host
+    token                  = scaleway_k8s_cluster.k8s-cluster.kubeconfig[0].token
+    cluster_ca_certificate = scaleway_k8s_cluster.k8s-cluster.kubeconfig[0].cluster_ca_certificate
+  }
 }
 
+provider "kubernetes" {
+  host  = null_resource.kubeconfig.triggers.host
+  token = null_resource.kubeconfig.triggers.token
+  cluster_ca_certificate = base64decode(
+    null_resource.kubeconfig.triggers.cluster_ca_certificate
+  )
+}
 provider "helm" {
   kubernetes {
-    config_path = "/Users/george.burton/dosac/infrastrcuture/scw/kubeconfig.yaml"
+  host  = null_resource.kubeconfig.triggers.host
+  token = null_resource.kubeconfig.triggers.token
+  cluster_ca_certificate = base64decode(
+    null_resource.kubeconfig.triggers.cluster_ca_certificate
+  )
   }
 }
 
@@ -20,7 +36,7 @@ resource "kubernetes_secret" "app_secret" {
     OPENAI_API_VERSION      = "2024-02-01",
     AWS_STORAGE_BUCKET_NAME = scaleway_object_bucket.bucket.name,
     AWS_S3_ENDPOINT_URL     = scaleway_object_bucket.bucket.api_endpoint,
-    APP_HOST                = "51.159.112.167",
+    APP_HOST                = "51.159.112.167", # =web_service_external_ip, chicken and egg - deploy with anything and then change it
     DEBUG                   = true,
     SECRET_KEY              = "Postgres123!",
     POSTGRES_HOST           = scaleway_rdb_instance.main.endpoint_ip,

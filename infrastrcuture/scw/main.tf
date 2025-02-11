@@ -30,36 +30,9 @@ resource "scaleway_rdb_privilege" "main" {
   permission    = "all"
 }
 
-
-output "pg_host" {
-  value = scaleway_rdb_instance.main.endpoint_ip
-}
-
-output "pg_port" {
-  value = scaleway_rdb_instance.main.endpoint_port
-}
-
-output "pg_password" {
-  value = scaleway_rdb_instance.main.password
-  sensitive = true
-}
-
-output "pg_user" {
-  value = scaleway_rdb_instance.main.user_name
-}
-
-output "pg_database" {
-  value = scaleway_rdb_instance.main.name
-}
-
-
 resource "scaleway_object_bucket" "bucket" {
   name = "${var.project_name}-static"
   region = var.region
-}
-
-output "bucket_url" {
-  value = "https://${scaleway_object_bucket.bucket.name}.${scaleway_object_bucket.bucket.endpoint}"
 }
 
 resource "scaleway_vpc_private_network" "vpc" {
@@ -86,11 +59,5 @@ resource "scaleway_k8s_pool" "pool" {
 
   region = var.region
   tags = ["example", "k8s"]
-}
-
-output "kubeconfig" {
-  value     = scaleway_k8s_cluster.k8s-cluster.kubeconfig[0].config_file
-  sensitive = true
-  description = "Kubeconfig to access your Kubernetes cluster."
 }
 
