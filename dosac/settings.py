@@ -27,7 +27,7 @@ if APP_HOST := os.environ.get("APP_HOST"):
     ALLOWED_HOSTS = ["localhost", APP_HOST]
     CSRF_TRUSTED_ORIGINS = [f"https://{APP_HOST}"]
     WEBSOCKET_SCHEME = "ws"  # should be wss
-    HTTP_SCHEME = "https"
+    HTTP_SCHEME = "http"  # should be https
 
     AWS_STORAGE_BUCKET_NAME = os.environ["AWS_STORAGE_BUCKET_NAME"]
     AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
