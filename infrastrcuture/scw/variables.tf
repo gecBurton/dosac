@@ -47,8 +47,8 @@ variable "postgres_host" {
   default = "postgres"
 }
 
-variable "postgres_port" {
+variable "openai_api_key" {
   type = string
-  default = "5432"
+  sensitive = true
 }
 
